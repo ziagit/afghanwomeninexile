@@ -1,10 +1,10 @@
 <header data-site-header>
     <div class="nav-wrap">
-        <a href="{{ route('home') }}" class="brand" aria-label="MAWIE Home">
+        <a href="{{ route('home') }}" class="brand" aria-label="AfghanWomenInExile Home">
             <span class="mark">M</span>
             <span class="names">
-                <span class="full">MAWIE</span>
-                <span class="short">Women in Exile</span>
+                <span class="full">AFGHANWOMENINEXILE</span>
+                <span class="short">Movement of Afghan Women in Exile</span>
             </span>
         </a>
 

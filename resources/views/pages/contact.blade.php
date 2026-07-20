@@ -14,7 +14,7 @@
             <div class="info-block">
                 <span class="eyebrow">Email Us</span>
                 <svg class="info-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <div class="val">admin@afghanwomeninexile.org</div>
+                <div class="val">farzana@afghanwomeninexile.org</div>
             </div>
             <div class="info-block">
                 <span class="eyebrow">Call Us</span>

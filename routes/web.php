@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GaleryController;
+use App\Http\Controllers\Admin\VerificationController as AdminVerificationController;
+use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'pages.home', [
@@ -29,3 +36,21 @@ Route::view('/contact', 'pages.contact', [
     'pageTitle' => 'Contact',
     'metaDescription' => 'Feel free to contact us regarding our activities and to get involved.',
 ])->name('contact');
+
+Route::get('/verify-member', [VerificationController::class, 'index'])->name('verify-member');
+
+Route::get('/login', [AuthController::class, 'create'])->name('login');
+Route::post('/login', [AuthController::class, 'store'])->name('login.store');
+
+Route::post('/logout', [AuthController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('logout');
+
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('activities', ActivityController::class)->except(['show']);
+    Route::resource('galeries', GaleryController::class)->except(['show']);
+    Route::resource('verifications', AdminVerificationController::class)->except(['show']);
+    Route::resource('videos', VideoController::class)->except(['show']);
+});

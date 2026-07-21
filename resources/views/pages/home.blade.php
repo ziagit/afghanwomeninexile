@@ -89,7 +89,7 @@
                     </div>
                     <span class="eyebrow">{{ $post['tag'] }}</span>
                     <h4>{{ $post['title'] }}</h4>
-                    <p>{{ $post['text'] }}</p>
+                    <p class="featured-post-body">{{ $post['text'] }}</p>
                     <span class="more">Read statement →</span>
                 </a>
             @endforeach

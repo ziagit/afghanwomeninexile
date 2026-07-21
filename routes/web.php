@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Activity;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\Admin\VerificationController as AdminVerificationContro
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 Route::view('/', 'pages.home', [
     'pageTitle' => null,
@@ -15,11 +17,49 @@ Route::view('/', 'pages.home', [
     'featuredPosts' => config('mawie.featured_posts'),
 ])->name('home');
 
-Route::view('/activities', 'pages.activities', [
-    'pageTitle' => 'Activities',
-    'metaDescription' => "A chronological record of MAWIE's public statements, commemorations, and engagements - a plainspoken account of what we've raised our voice on, and when.",
-    'archiveEntries' => config('mawie.archive_entries'),
-])->name('activities');
+Route::get('/activities', function () {
+    $activities = Activity::query()
+        ->orderBy('id')
+        ->paginate(10);
+
+    $activities->getCollection()->transform(function (Activity $activity) {
+        $paragraphs = preg_split("/\R{2,}/", trim((string) $activity->body)) ?: [];
+        $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
+        $excerptSource = implode(' ', array_slice($paragraphs, 0, 2));
+
+        return [
+            'id' => $activity->id,
+            'tag' => Str::headline((string) $activity->type),
+            'sub' => $activity->name ?: 'Advocacy',
+            'title' => $activity->title,
+            'paragraphs' => $paragraphs,
+            'excerpt' => Str::limit($excerptSource, 240),
+        ];
+    });
+
+    return view('pages.activities', [
+        'pageTitle' => 'Activities',
+        'metaDescription' => "A chronological record of MAWIE's public statements, commemorations, and engagements - a plainspoken account of what we've raised our voice on, and when.",
+        'activities' => $activities,
+    ]);
+})->name('activities');
+
+Route::get('/activities/{activity}', function (Activity $activity) {
+    $paragraphs = preg_split("/\R{2,}/", trim((string) $activity->body)) ?: [];
+    $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
+
+    return view('pages.activity', [
+        'pageTitle' => $activity->title,
+        'metaDescription' => Str::limit(strip_tags($activity->body), 160),
+        'activity' => [
+            'id' => $activity->id,
+            'tag' => Str::headline((string) $activity->type),
+            'sub' => $activity->name ?: 'Advocacy',
+            'title' => $activity->title,
+            'paragraphs' => $paragraphs,
+        ],
+    ]);
+})->name('activities.show');
 
 Route::view('/about', 'pages.about', [
     'pageTitle' => 'About Us',

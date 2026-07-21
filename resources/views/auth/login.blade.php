@@ -1,4 +1,4 @@
-@extends('layouts.auth')
+@extends('layouts.app')
 
 @section('content')
 <section class="auth-screen">
@@ -6,8 +6,7 @@
         <div class="auth-mark">A</div>
         <div class="auth-copy">
             <span class="eyebrow">Admin access</span>
-            <h1>Sign in to manage activities, galeries, and videos.</h1>
-            <p>Use the administrator account to create, update, and delete content across the site.</p>
+            <h1>Sign in</h1>
         </div>
 
         <form class="auth-form" method="post" action="{{ route('login.store') }}">
@@ -34,8 +33,6 @@
             </label>
 
             <button type="submit" class="btn btn-gold auth-button">Login</button>
-
-            <p class="auth-note">Default seeded account: <strong>farzana@afghanwomeninexile.org</strong> / <strong>password</strong></p>
         </form>
     </div>
 </section>

@@ -4,7 +4,7 @@
             <span class="mark">M</span>
             <span class="names">
                 <span class="full">AFGHANWOMENINEXILE</span>
-                <span class="short">Movement of Afghan Women in Exile</span>
+                <span class="short">Movement of</span>
             </span>
         </a>
 

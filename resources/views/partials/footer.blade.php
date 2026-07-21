@@ -14,9 +14,7 @@
                     <li><a href="{{ route('media') }}">Media</a></li>
                     <li><a href="{{ route('contact') }}">Contact</a></li>
                     <li><a href="{{ route('verify-member') }}">Verify</a></li>
-                    @guest
-                        <li><a href="{{ route('login') }}">Login</a></li>
-                    @endguest
+                    <li><a href="{{ route('login') }}">Login</a></li>
                 </ul>
             </div>
             <div>
@@ -38,7 +36,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span>© 2026 The Movement of Afghanistan Women in Exile. All rights reserved.</span>
+            <span>© 2026 The Movement of Afghan Women in Exile. All rights reserved.</span>
             <span>Standing for justice, equality, and human dignity.</span>
         </div>
     </div>

@@ -3,7 +3,7 @@
 @section('content')
 <x-page-hero eyebrow="Verification" title="Verify a Member" description="Enter a member ID to check whether a verification record exists in our system." />
 
-<section class="tight">
+<section class="tight verify-page">
     <div class="wrap">
         <div class="verify-panel">
             <form class="verify-form" method="get" action="{{ route('verify-member') }}">

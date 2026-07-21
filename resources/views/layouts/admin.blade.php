@@ -16,7 +16,7 @@
     <div class="admin-shell">
         <aside class="admin-sidebar">
             <div>
-                <div class="admin-brand">AFGHANWOMENINEXILE</div>
+                <div class="admin-brand">DASHBOARD</div>
                 <p class="admin-subtitle">Content administration</p>
             </div>
 

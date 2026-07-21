@@ -25,21 +25,19 @@
     <div class="wrap">
         <span class="eyebrow" style="color:var(--brick)">Featured Observance</span>
         <div class="dispatch-card dispatch-card--media" style="margin-top:22px">
+            @php
+                $observanceBody = !empty($featuredObservance['paragraphs'])
+                    ? implode(' ', $featuredObservance['paragraphs'])
+                    : 'No recent activity is available yet.';
+            @endphp
             <div class="stamp">
                 <span class="day">{{ $featuredObservance['stampDay'] ?? 'Latest' }}</span>
                 <span class="rest">{{ $featuredObservance['stampRest'] ?? 'Activity' }}</span>
             </div>
             <div>
                 <h3>{{ $featuredObservance['eventName'] ?? 'No recent activity available' }}</h3>
-                @if(!empty($featuredObservance['paragraphs']))
-                    @foreach($featuredObservance['paragraphs'] as $paragraph)
-                        <p>{{ $paragraph }}</p>
-                    @endforeach
-                    <a class="more" href="{{ $featuredObservance['link'] ?? route('activities') }}">Read the full commemoration →</a>
-                @else
-                    <p>No recent activity is available yet.</p>
-                    <a class="more" href="{{ route('activities') }}">Read the full commemoration →</a>
-                @endif
+                <p class="featured-observance-body">{{ $observanceBody }}</p>
+                <a class="more" href="{{ $featuredObservance['link'] ?? route('activities') }}">Read the full commemoration →</a>
             </div>
             <div class="ph dispatch-media">
                 @if(!empty($featuredObservance['image']))

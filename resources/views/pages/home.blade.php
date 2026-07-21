@@ -36,7 +36,7 @@
             </div>
             <div>
                 <h3>{{ $featuredObservance['eventName'] ?? 'No recent activity available' }}</h3>
-                <p class="featured-observance-body">{{ $observanceBody }}</p>
+                <p class="featured-observance-body" style="display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden;line-height:1.55;max-height:12.4em;">{{ $observanceBody }}</p>
                 <a class="more" href="{{ $featuredObservance['link'] ?? route('activities') }}">Read the full commemoration →</a>
             </div>
             <div class="ph dispatch-media">

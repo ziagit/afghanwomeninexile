@@ -28,10 +28,10 @@
             <div>
                 <h5>Follow Us</h5>
                 <div class="footer-social">
-                    <a href="https://www.facebook.com/profile.php?id=100063624367243" target="_blank" rel="noreferrer" aria-label="Facebook"><span>f</span></a>
-                    <a href="https://x.com/rezaeifarzana" target="_blank" rel="noreferrer" aria-label="X / Twitter"><span>x</span></a>
-                    <a href="https://www.youtube.com/@TheMovementofAfgWomeninExile" target="_blank" rel="noreferrer" aria-label="YouTube"><span>▶</span></a>
-                    <a href="https://www.instagram.com/movement_afg_women_in_exile_" target="_blank" rel="noreferrer" aria-label="Instagram"><span>ig</span></a>
+                    <a href="https://www.facebook.com/profile.php?id=100063624367243" target="_blank" rel="noreferrer" aria-label="Facebook"><x-social-icon type="facebook" /></a>
+                    <a href="https://x.com/rezaeifarzana" target="_blank" rel="noreferrer" aria-label="X / Twitter"><x-social-icon type="x" /></a>
+                    <a href="https://www.youtube.com/@TheMovementofAfgWomeninExile" target="_blank" rel="noreferrer" aria-label="YouTube"><x-social-icon type="youtube" /></a>
+                    <a href="https://www.instagram.com/movement_afg_women_in_exile_" target="_blank" rel="noreferrer" aria-label="Instagram"><x-social-icon type="instagram" /></a>
                 </div>
             </div>
         </div>

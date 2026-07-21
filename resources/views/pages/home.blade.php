@@ -13,9 +13,8 @@
         </div>
     </div>
     <div class="wrap">
-        <div class="ph on-dark hero-media">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
-            <span>Photo placeholder - event or portrait image</span>
+        <div class="ph on-dark hero-media hero-media--frame">
+            <img src="{{ asset('images/justice-for-herat.avif') }}" alt="Justice for Herat" class="hero-media__img">
         </div>
     </div>
 </section>
@@ -27,18 +26,28 @@
         <span class="eyebrow" style="color:var(--brick)">Featured Observance</span>
         <div class="dispatch-card dispatch-card--media" style="margin-top:22px">
             <div class="stamp">
-                <span class="day">19</span>
-                <span class="rest">May<br>Hazara<br>Culture Day</span>
+                <span class="day">{{ $featuredObservance['stampDay'] ?? 'Latest' }}</span>
+                <span class="rest">{{ $featuredObservance['stampRest'] ?? 'Activity' }}</span>
             </div>
             <div>
-                <h3>Hazara Culture Day</h3>
-                <p>Observed annually on 19 May, Hazara Culture Day celebrates the rich cultural heritage, history, identity, and contributions of the Hazara people - and the languages, literature, arts, and historical memory that come with it.</p>
-                <p>Protecting cultural heritage is inseparable from protecting human dignity, freedom of expression, and every community's right to preserve and share its identity without discrimination. Cultural diversity remains one of Afghanistan's greatest strengths.</p>
-                <a class="more" href="{{ route('activities') }}">Read the full commemoration →</a>
+                <h3>{{ $featuredObservance['eventName'] ?? 'No recent activity available' }}</h3>
+                @if(!empty($featuredObservance['paragraphs']))
+                    @foreach($featuredObservance['paragraphs'] as $paragraph)
+                        <p>{{ $paragraph }}</p>
+                    @endforeach
+                    <a class="more" href="{{ $featuredObservance['link'] ?? route('activities') }}">Read the full commemoration →</a>
+                @else
+                    <p>No recent activity is available yet.</p>
+                    <a class="more" href="{{ route('activities') }}">Read the full commemoration →</a>
+                @endif
             </div>
-            <div class="ph">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
-                <span>Event photo placeholder</span>
+            <div class="ph dispatch-media">
+                @if(!empty($featuredObservance['image']))
+                    <img src="{{ $featuredObservance['image'] }}" alt="{{ $featuredObservance['imageAlt'] ?? 'Featured observance' }}" class="dispatch-media__img">
+                @else
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
+                    <span>Event photo placeholder</span>
+                @endif
             </div>
         </div>
     </div>
@@ -53,9 +62,8 @@
         </div>
         <div>
             <p>The Movement of Afghanistan Women in Exile was established in April 2025 by a coalition of human rights and women's rights advocates, united by a shared commitment to addressing the challenges faced by Afghan women under Taliban rule. With a focus on advocating for the legal and rightful protections of women, the movement raises awareness of their struggles, amplifies their voices, and fosters international support for their empowerment - through diplomatic engagement, collaboration, and education.</p>
-            <div class="ph">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
-                <span>Photo placeholder</span>
+            <div class="ph mission-media">
+                <img src="{{ asset('images/equality.avif') }}" alt="Equality" class="mission-media__img">
             </div>
         </div>
     </div>
@@ -69,7 +77,7 @@
         </div>
         <div class="posts-grid">
             @foreach($featuredPosts as $post)
-                <a class="post-card" href="{{ route('activities') }}">
+                <a class="post-card" href="{{ $post['link'] ?? route('activities') }}">
                     <div class="ph">
                         @if($post['kind'] === 'video')
                             <span class="ph-play">

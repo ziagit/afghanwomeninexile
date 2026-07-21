@@ -14,7 +14,7 @@
             <div class="info-block">
                 <span class="eyebrow">Email Us</span>
                 <svg class="info-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <div class="val">farzana@afghanwomeninexile.org</div>
+                <div class="val">info@afghanwomeninexile.org</div>
             </div>
             <div class="info-block">
                 <span class="eyebrow">Call Us</span>
@@ -24,36 +24,36 @@
             <div class="info-block">
                 <span class="eyebrow">Follow Us</span>
                 <div class="social-row">
-                    <a href="https://www.facebook.com/profile.php?id=100063624367243" target="_blank" rel="noreferrer" aria-label="Facebook"><span>f</span></a>
-                    <a href="https://x.com/rezaeifarzana" target="_blank" rel="noreferrer" aria-label="X / Twitter"><span>x</span></a>
-                    <a href="https://www.youtube.com/@TheMovementofAfgWomeninExile" target="_blank" rel="noreferrer" aria-label="YouTube"><span>▶</span></a>
-                    <a href="https://www.instagram.com/movement_afg_women_in_exile_" target="_blank" rel="noreferrer" aria-label="Instagram"><span>ig</span></a>
+                    <a href="https://www.facebook.com/profile.php?id=100063624367243" target="_blank" rel="noreferrer" aria-label="Facebook"><x-social-icon type="facebook" /></a>
+                    <a href="https://x.com/rezaeifarzana" target="_blank" rel="noreferrer" aria-label="X / Twitter"><x-social-icon type="x" /></a>
+                    <a href="https://www.youtube.com/@TheMovementofAfgWomeninExile" target="_blank" rel="noreferrer" aria-label="YouTube"><x-social-icon type="youtube" /></a>
+                    <a href="https://www.instagram.com/movement_afg_women_in_exile_" target="_blank" rel="noreferrer" aria-label="Instagram"><x-social-icon type="instagram" /></a>
                 </div>
             </div>
         </div>
 
         <div>
-            <form class="contact-form" action="#" method="post">
+            <form class="contact-form" action="{{ route('contact.send') }}" method="post">
                 @csrf
-                <div class="form-row">
-                    <div class="field">
-                        <label for="fname">First name</label>
-                        <input id="fname" type="text" name="fname" required>
-                    </div>
-                    <div class="field">
-                        <label for="lname">Last name</label>
-                        <input id="lname" type="text" name="lname" required>
-                    </div>
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input id="name" type="text" name="name" value="{{ old('name') }}" required>
+                    @error('name') <div class="field-error">{{ $message }}</div> @enderror
                 </div>
                 <div class="field">
                     <label for="email">Email</label>
-                    <input id="email" type="email" name="email" required>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+                    @error('email') <div class="field-error">{{ $message }}</div> @enderror
                 </div>
                 <div class="field">
                     <label for="message">Message</label>
-                    <textarea id="message" name="message" required></textarea>
+                    <textarea id="message" name="message" required>{{ old('message') }}</textarea>
+                    @error('message') <div class="field-error">{{ $message }}</div> @enderror
                 </div>
-                <p class="form-note">This form is a visual placeholder - connect it to your mail service or a form backend before publishing.</p>
+                <p class="form-note">Messages are sent directly to our inbox.</p>
+                @if(session('status'))
+                    <p class="form-note">{{ session('status') }}</p>
+                @endif
                 <div>
                     <button type="submit" class="btn btn-brick">Submit</button>
                     <div id="formStatus"></div>

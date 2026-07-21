@@ -12,9 +12,8 @@
                     <h3>{{ $block['title'] }}</h3>
                     <p>{{ $block['text'] }}</p>
                     @if($block['image'])
-                        <div class="ph team-ph">
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
-                            <span>Team photo placeholder</span>
+                        <div class="ph team-ph team-ph--image">
+                            <img src="{{ asset('images/our-team.avif') }}" alt="Our team" class="team-ph__img">
                         </div>
                     @endif
                 </div>

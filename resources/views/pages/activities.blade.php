@@ -1,6 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    if (! isset($activities)) {
+        $activities = \App\Models\Activity::query()->orderBy('id')->paginate(10);
+    }
+
+    $activities->setCollection(
+        $activities->getCollection()->map(function ($entry) {
+            if (is_array($entry)) {
+                return $entry;
+            }
+
+            $paragraphs = preg_split("/\R{2,}/", trim((string) $entry->body)) ?: [];
+            $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
+            $excerptSource = implode(' ', array_slice($paragraphs, 0, 2));
+
+            return [
+                'id' => $entry->id,
+                'tag' => \Illuminate\Support\Str::headline((string) $entry->type),
+                'sub' => $entry->name ?: 'Advocacy',
+                'title' => $entry->title,
+                'paragraphs' => $paragraphs,
+                'excerpt' => \Illuminate\Support\Str::limit($excerptSource, 240),
+            ];
+        })
+    );
+@endphp
+
 <x-page-hero eyebrow="Activities" title="Our Statements &amp; Advocacy Record" description="A chronological record of MAWIE's public statements, commemorations, and engagements - a plainspoken account of what we've raised our voice on, and when." />
 
 <section>

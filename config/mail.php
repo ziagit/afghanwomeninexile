@@ -115,4 +115,9 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    'contact' => [
+        'address' => env('MAIL_CONTACT_ADDRESS', 'info@afghanwomeninexile.org'),
+        'name' => env('MAIL_CONTACT_NAME', env('APP_NAME', 'Laravel')),
+    ],
+
 ];

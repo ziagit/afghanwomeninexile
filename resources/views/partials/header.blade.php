@@ -3,8 +3,8 @@
         <a href="{{ route('home') }}" class="brand" aria-label="AfghanWomenInExile Home">
             <span class="mark">M</span>
             <span class="names">
-                <span class="full">AFGHANWOMENINEXILE</span>
-                <span class="short">Movement of</span>
+                <span class="full">AFGHAN WOMEN</span>
+                <span class="short">In Exile</span>
             </span>
         </a>
 

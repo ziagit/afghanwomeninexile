@@ -67,7 +67,11 @@
                     <a class="pagination-btn" href="{{ $activities->previousPageUrl() }}">Prev</a>
                 @endif
 
-                @for ($page = 1; $page <= $activities->lastPage(); $page++)
+                @php
+                    $startPage = max(1, min($activities->currentPage() - 1, $activities->lastPage() - 2));
+                    $endPage = min($activities->lastPage(), $startPage + 2);
+                @endphp
+                @for ($page = $startPage; $page <= $endPage; $page++)
                     @if ($page === $activities->currentPage())
                         <span class="pagination-btn is-active" aria-current="page">{{ $page }}</span>
                     @else

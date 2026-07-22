@@ -20,21 +20,16 @@
                     data-video-item
                     data-video-link="{{ $video->video_link }}"
                 >
-                    <div class="video-card__link">
+                    <div class="video-card__media">
                         @if($video->thumbnail)
-                            <img
-                                class="video-card__thumbnail"
-                                src="{{ asset('storage/' . $video->thumbnail) }}"
-                                alt="{{ $video->name }}"
-                                loading="lazy"
-                            >
+                            <img class="video-card__thumbnail" src="{{ asset('storage/' . $video->thumbnail) }}" alt="{{ $video->name }}" loading="lazy">
                         @else
                             <x-media-placeholder class="video-card__placeholder" kind="video" label="Watch video" />
                         @endif
                         <span class="video-card__play" aria-hidden="true">▶</span>
-                        <span class="video-card__body">
-                            <strong>{{ $video->name }}</strong>
-                        </span>
+                    </div>
+                    <div class="video-card__body">
+                        <strong>{{ $video->name }}</strong>
                     </div>
                 </article>
             @empty
@@ -51,7 +46,9 @@
                         <a class="pagination-btn" href="{{ $videos->previousPageUrl() }}">Prev</a>
                     @endif
 
-                    @for ($page = 1; $page <= $videos->lastPage(); $page++)
+                    @php($videoStartPage = max(1, min($videos->currentPage() - 1, $videos->lastPage() - 2)))
+                    @php($videoEndPage = min($videos->lastPage(), $videoStartPage + 2))
+                    @for ($page = $videoStartPage; $page <= $videoEndPage; $page++)
                         @if ($page === $videos->currentPage())
                             <span class="pagination-btn is-active" aria-current="page">{{ $page }}</span>
                         @else
@@ -110,7 +107,9 @@
                         <a class="pagination-btn" href="{{ $galeries->previousPageUrl() }}">Prev</a>
                     @endif
 
-                    @for ($page = 1; $page <= $galeries->lastPage(); $page++)
+                    @php($galleryStartPage = max(1, min($galeries->currentPage() - 1, $galeries->lastPage() - 2)))
+                    @php($galleryEndPage = min($galeries->lastPage(), $galleryStartPage + 2))
+                    @for ($page = $galleryStartPage; $page <= $galleryEndPage; $page++)
                         @if ($page === $galeries->currentPage())
                             <span class="pagination-btn is-active" aria-current="page">{{ $page }}</span>
                         @else

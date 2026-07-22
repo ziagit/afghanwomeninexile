@@ -59,6 +59,7 @@
     <div class="field">
         <label for="picture">Picture</label>
         <input id="picture" name="picture" type="file" accept="image/*">
+        <span class="form-note">Maximum file size: 1 MB.</span>
         @if ($isEdit && $verification->picture)
             <div class="preview-row">
                 <span>Current picture:</span>

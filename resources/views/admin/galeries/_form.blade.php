@@ -7,7 +7,8 @@
 
     <div class="field">
         <label for="name">Name</label>
-        <input id="name" name="name" type="text" value="{{ old('name', $galery->name) }}" required>
+        <input id="name" name="name" type="text" value="{{ old('name', $galery->name) }}" maxlength="25" required>
+        <span class="form-note">Maximum 25 characters.</span>
         @error('name')<span class="field-error">{{ $message }}</span>@enderror
     </div>
 
@@ -20,6 +21,7 @@
     <div class="field">
         <label for="picture">Picture</label>
         <input id="picture" name="picture" type="file" accept="image/*">
+        <span class="form-note">Maximum file size: 1 MB.</span>
         @if ($isEdit && $galery->picture)
             <div class="preview-row">
                 <span>Current picture:</span>

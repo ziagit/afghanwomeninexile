@@ -47,5 +47,30 @@
         </table>
     </div>
 
+    @if ($galeries->hasPages())
+        <div class="archive-pagination">
+            <div class="pagination-strip" aria-label="Galeries pagination">
+                @if ($galeries->onFirstPage())
+                    <span class="pagination-btn is-disabled" aria-disabled="true">Prev</span>
+                @else
+                    <a class="pagination-btn" href="{{ $galeries->previousPageUrl() }}">Prev</a>
+                @endif
+
+                @for ($page = 1; $page <= $galeries->lastPage(); $page++)
+                    @if ($page === $galeries->currentPage())
+                        <span class="pagination-btn is-active" aria-current="page">{{ $page }}</span>
+                    @else
+                        <a class="pagination-btn" href="{{ $galeries->url($page) }}">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                @if ($galeries->hasMorePages())
+                    <a class="pagination-btn" href="{{ $galeries->nextPageUrl() }}">Next</a>
+                @else
+                    <span class="pagination-btn is-disabled" aria-disabled="true">Next</span>
+                @endif
+            </div>
+        </div>
+    @endif
 </section>
 @endsection

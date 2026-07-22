@@ -24,8 +24,8 @@
                 <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('admin.activities.index') }}" class="{{ request()->routeIs('admin.activities.*') ? 'active' : '' }}">Activities</a>
                 <a href="{{ route('admin.galeries.index') }}" class="{{ request()->routeIs('admin.galeries.*') ? 'active' : '' }}">Galeries</a>
-                <a href="{{ route('admin.verifications.create') }}" class="{{ request()->routeIs('admin.verifications.create') ? 'active' : '' }}">Add New Member</a>
                 <a href="{{ route('admin.videos.index') }}" class="{{ request()->routeIs('admin.videos.*') ? 'active' : '' }}">Videos</a>
+                <a href="{{ route('admin.verifications.index') }}" class="{{ request()->routeIs('admin.verifications.*') ? 'active' : '' }}">Members</a>
                 <a href="{{ route('home') }}">View site</a>
             </nav>
         </aside>
@@ -46,6 +46,9 @@
             <main class="admin-content">
                 @if (session('status'))
                     <div class="admin-alert">{{ session('status') }}</div>
+                @endif
+                @if (session('upload_error'))
+                    <div class="admin-alert admin-alert--error">{{ session('upload_error') }}</div>
                 @endif
 
                 @yield('content')

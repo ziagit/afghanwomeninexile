@@ -11,11 +11,26 @@ use Illuminate\View\View;
 
 class ActivityController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = $request->string('search')->trim()->toString();
+        $activities = Activity::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('type', 'like', '%' . $search . '%')
+                        ->orWhere('title', 'like', '%' . $search . '%')
+                        ->orWhere('body', 'like', '%' . $search . '%');
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.activities.index', [
             'pageTitle' => 'Manage Activities',
-            'activities' => Activity::latest()->get(),
+            'activities' => $activities,
+            'search' => $search,
         ]);
     }
 
@@ -76,7 +91,9 @@ class ActivityController extends Controller
             'type' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'max:4096'],
+            'image' => ['nullable', 'image', 'max:1024'],
+        ], [
+            'image.max' => 'This file size is too large. Please optimize and upload.',
         ]);
     }
 

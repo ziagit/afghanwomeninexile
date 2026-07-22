@@ -3,7 +3,11 @@
         <div class="footer-grid">
             <div>
                 <div class="brand-line">AFGHANWOMENINEXILE</div>
-                <p>The Movement of Afghanistan Women in Exile advances human rights, gender equality, and the dignity of Afghan women through peaceful advocacy, education, and international cooperation.</p>
+                <p>The Movement of Afghan women in Exile advances human rights, gender equality, and the dignity of Afghan women through peaceful advocacy, education, and international cooperation.</p>
+                <div class="footer-actions">
+                    <a href="{{ route('verify-member') }}">Verify</a>
+                    <a href="{{ route('login') }}">Login</a>
+                </div>
             </div>
             <div>
                 <h5>Quick Links</h5>
@@ -13,8 +17,6 @@
                     <li><a href="{{ route('about') }}">About Us</a></li>
                     <li><a href="{{ route('media') }}">Media</a></li>
                     <li><a href="{{ route('contact') }}">Contact</a></li>
-                    <li><a href="{{ route('verify-member') }}">Verify</a></li>
-                    <li><a href="{{ route('login') }}">Login</a></li>
                 </ul>
             </div>
             <div>

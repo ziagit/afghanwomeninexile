@@ -7,6 +7,15 @@
         <a href="{{ route('admin.activities.create') }}">Create activity</a>
     </div>
 
+    <form class="admin-search" method="get" action="{{ route('admin.activities.index') }}">
+        <label class="sr-only" for="activity-search">Search activities</label>
+        <input id="activity-search" name="search" type="search" value="{{ $search }}" placeholder="Search by name, type, title, or content">
+        <button class="btn btn-brick" type="submit">Search</button>
+        @if ($search !== '')
+            <a class="btn btn-outline" href="{{ route('admin.activities.index') }}">Clear</a>
+        @endif
+    </form>
+
     <div class="admin-table-wrap">
         <table class="admin-table">
             <thead>
@@ -49,5 +58,30 @@
         </table>
     </div>
 
+    @if ($activities->hasPages())
+        <div class="archive-pagination">
+            <div class="pagination-strip" aria-label="Activities pagination">
+                @if ($activities->onFirstPage())
+                    <span class="pagination-btn is-disabled" aria-disabled="true">Prev</span>
+                @else
+                    <a class="pagination-btn" href="{{ $activities->previousPageUrl() }}">Prev</a>
+                @endif
+
+                @for ($page = 1; $page <= $activities->lastPage(); $page++)
+                    @if ($page === $activities->currentPage())
+                        <span class="pagination-btn is-active" aria-current="page">{{ $page }}</span>
+                    @else
+                        <a class="pagination-btn" href="{{ $activities->url($page) }}">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                @if ($activities->hasMorePages())
+                    <a class="pagination-btn" href="{{ $activities->nextPageUrl() }}">Next</a>
+                @else
+                    <span class="pagination-btn is-disabled" aria-disabled="true">Next</span>
+                @endif
+            </div>
+        </div>
+    @endif
 </section>
 @endsection

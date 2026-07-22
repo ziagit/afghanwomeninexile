@@ -33,6 +33,7 @@
     <div class="field">
         <label for="image">Image</label>
         <input id="image" name="image" type="file" accept="image/*">
+        <span class="form-note">Maximum file size: 1 MB.</span>
         @if ($isEdit && $activity->image)
             <div class="preview-row">
                 <span>Current image:</span>

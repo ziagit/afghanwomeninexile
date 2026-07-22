@@ -3,7 +3,7 @@
 @section('content')
 <section class="hero">
     <div class="wrap">
-        <span class="eyebrow">The Movement of Afghanistan Women in Exile</span>
+        <span class="eyebrow">The Movement of Afghan women in Exile</span>
         <h1 style="margin-top:16px">Standing for justice, equality, and human dignity.</h1>
         <div class="rule"></div>
         <p class="sub">We advance human rights, promote gender equality, and empower Afghan women in exile through peaceful advocacy, education, and international cooperation.</p>
@@ -59,7 +59,7 @@
             <a class="more" style="color:var(--brick); font-weight:600; font-size:.9rem" href="{{ route('about') }}">More about us →</a>
         </div>
         <div>
-            <p>The Movement of Afghanistan Women in Exile was established in April 2025 by a coalition of human rights and women's rights advocates, united by a shared commitment to addressing the challenges faced by Afghan women under Taliban rule. With a focus on advocating for the legal and rightful protections of women, the movement raises awareness of their struggles, amplifies their voices, and fosters international support for their empowerment - through diplomatic engagement, collaboration, and education.</p>
+            <p>The Movement of Afghan women in Exile was established in April 2025 by a coalition of human rights and women's rights advocates, united by a shared commitment to addressing the challenges faced by Afghan women under Taliban rule. With a focus on advocating for the legal and rightful protections of women, the movement raises awareness of their struggles, amplifies their voices, and fosters international support for their empowerment - through diplomatic engagement, collaboration, and education.</p>
             <div class="ph mission-media">
                 <img src="{{ asset('images/equality.avif') }}" alt="Equality" class="mission-media__img">
             </div>
@@ -76,15 +76,19 @@
         <div class="posts-grid">
             @foreach($featuredPosts as $post)
                 <a class="post-card" href="{{ $post['link'] ?? route('activities') }}">
-                    <div class="ph">
+                    <div class="ph{{ !empty($post['image']) ? ' post-card__media--image' : '' }}">
                         @if($post['kind'] === 'video')
                             <span class="ph-play">
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor"/></svg>
                             </span>
                             <span>Video placeholder</span>
                         @else
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
-                            <span>Photo placeholder</span>
+                            @if(!empty($post['image']))
+                                <img src="{{ $post['image'] }}" alt="{{ $post['imageAlt'] ?? $post['title'] }}" class="post-card__media-img" loading="lazy">
+                            @else
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
+                                <span>Photo placeholder</span>
+                            @endif
                         @endif
                     </div>
                     <span class="eyebrow">{{ $post['tag'] }}</span>

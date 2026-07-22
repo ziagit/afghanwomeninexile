@@ -15,7 +15,7 @@ class VideoController extends Controller
     {
         return view('admin.videos.index', [
             'pageTitle' => 'Manage Videos',
-            'videos' => Video::latest()->get(),
+            'videos' => Video::latest()->paginate(10)->withQueryString(),
         ]);
     }
 
@@ -72,10 +72,12 @@ class VideoController extends Controller
     private function validateRequest(Request $request): array
     {
         return $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:25'],
             'video_link' => ['required', 'url', 'max:2048'],
             'details' => ['required', 'string'],
-            'thumbnail' => ['nullable', 'image', 'max:4096'],
+            'thumbnail' => ['nullable', 'image', 'max:1024'],
+        ], [
+            'thumbnail.max' => 'This file size is too large. Please optimize and upload.',
         ]);
     }
 

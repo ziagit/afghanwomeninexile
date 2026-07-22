@@ -80,13 +80,15 @@ class VerificationController extends Controller
             'joined_at' => ['required', 'date'],
             'expirs_at' => ['nullable', 'date'],
             'note' => ['nullable', 'string'],
-            'picture' => ['nullable', 'image', 'max:4096'],
+            'picture' => ['nullable', 'image', 'max:1024'],
             'member_id' => [
                 'required',
                 'string',
                 'max:255',
                 Rule::unique('verifications', 'member_id')->ignore($verification?->id),
             ],
+        ], [
+            'picture.max' => 'This file size is too large. Please optimize and upload.',
         ]);
     }
 

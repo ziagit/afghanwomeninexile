@@ -5,9 +5,13 @@
 
 <section class="tight activity-page">
     <div class="wrap">
-        <div class="archive-entry archive-entry--detail">
-            <div class="archive-left">
-                <x-media-placeholder class="archive-media" label="Photo coming soon" />
+        <div class="archive-entry archive-entry--detail activity-detail">
+            <div class="activity-detail__media">
+                @if(!empty($activity['image']))
+                    <img class="activity-detail__image" src="{{ $activity['image'] }}" alt="{{ $activity['imageAlt'] ?? $activity['title'] }}" loading="lazy">
+                @else
+                    <x-media-placeholder class="activity-detail__placeholder" label="Photo coming soon" />
+                @endif
             </div>
             <div class="archive-text">
                 <div class="archive-tag">{{ $activity['tag'] }}<span class="sub">{{ $activity['sub'] }}</span></div>

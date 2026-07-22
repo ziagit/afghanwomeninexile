@@ -47,5 +47,30 @@
         </table>
     </div>
 
+    @if ($videos->hasPages())
+        <div class="archive-pagination">
+            <div class="pagination-strip" aria-label="Videos pagination">
+                @if ($videos->onFirstPage())
+                    <span class="pagination-btn is-disabled" aria-disabled="true">Prev</span>
+                @else
+                    <a class="pagination-btn" href="{{ $videos->previousPageUrl() }}">Prev</a>
+                @endif
+
+                @for ($page = 1; $page <= $videos->lastPage(); $page++)
+                    @if ($page === $videos->currentPage())
+                        <span class="pagination-btn is-active" aria-current="page">{{ $page }}</span>
+                    @else
+                        <a class="pagination-btn" href="{{ $videos->url($page) }}">{{ $page }}</a>
+                    @endif
+                @endfor
+
+                @if ($videos->hasMorePages())
+                    <a class="pagination-btn" href="{{ $videos->nextPageUrl() }}">Next</a>
+                @else
+                    <span class="pagination-btn is-disabled" aria-disabled="true">Next</span>
+                @endif
+            </div>
+        </div>
+    @endif
 </section>
 @endsection

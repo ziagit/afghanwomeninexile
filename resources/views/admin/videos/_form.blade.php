@@ -7,7 +7,8 @@
 
     <div class="field">
         <label for="name">Name</label>
-        <input id="name" name="name" type="text" value="{{ old('name', $video->name) }}" required>
+        <input id="name" name="name" type="text" value="{{ old('name', $video->name) }}" maxlength="25" required>
+        <span class="form-note">Maximum 25 characters.</span>
         @error('name')<span class="field-error">{{ $message }}</span>@enderror
     </div>
 
@@ -26,6 +27,7 @@
     <div class="field">
         <label for="thumbnail">Thumbnail</label>
         <input id="thumbnail" name="thumbnail" type="file" accept="image/*">
+        <span class="form-note">Maximum file size: 1 MB.</span>
         @if ($isEdit && $video->thumbnail)
             <div class="preview-row">
                 <span>Current thumbnail:</span>

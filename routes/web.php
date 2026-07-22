@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Activity;
+use App\Models\Galery;
+use App\Models\Video;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -48,13 +50,15 @@ Route::get('/', function () {
             'tag' => Str::headline((string) $activity->type),
             'title' => $activity->name ?: $activity->title,
             'text' => Str::limit($excerptSource, 180),
+            'image' => $activity->image ? asset('storage/' . $activity->image) : null,
+            'imageAlt' => $activity->title,
             'link' => route('activities.show', $activity->id),
         ];
     });
 
     return view('pages.home', [
         'pageTitle' => null,
-        'metaDescription' => 'MAWIE - The Movement of Afghanistan Women in Exile. Advancing human rights, gender equality, and the protection of Afghan women through peaceful advocacy, education, and international cooperation.',
+        'metaDescription' => 'MAWIE - The Movement of Afghan women in Exile. Advancing human rights, gender equality, and the protection of Afghan women through peaceful advocacy, education, and international cooperation.',
         'featuredPosts' => $featuredPosts,
         'featuredObservance' => $featuredObservance,
     ]);
@@ -77,6 +81,8 @@ Route::get('/activities', function () {
             'title' => $activity->title,
             'paragraphs' => $paragraphs,
             'excerpt' => Str::limit($excerptSource, 240),
+            'image' => $activity->image ? asset('storage/' . $activity->image) : null,
+            'imageAlt' => $activity->title,
         ];
     });
 
@@ -100,6 +106,8 @@ Route::get('/activities/{activity}', function (Activity $activity) {
             'sub' => $activity->name ?: 'Advocacy',
             'title' => $activity->title,
             'paragraphs' => $paragraphs,
+            'image' => $activity->image ? asset('storage/' . $activity->image) : null,
+            'imageAlt' => $activity->title,
         ],
     ]);
 })->name('activities.show');
@@ -110,10 +118,22 @@ Route::view('/about', 'pages.about', [
     'aboutBlocks' => config('mawie.about_blocks'),
 ])->name('about');
 
-Route::view('/media', 'pages.media', [
-    'pageTitle' => 'Media',
-    'metaDescription' => 'Photographs from events, commemorations, and meetings, along with short videos and statements as they become available.',
-])->name('media');
+Route::get('/media', function () {
+    return view('pages.media', [
+        'pageTitle' => 'Media',
+        'metaDescription' => 'Photographs from events, commemorations, and meetings, along with short videos and statements as they become available.',
+        'galeries' => Galery::query()
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(12, ['*'], 'gallery_page')
+            ->withQueryString(),
+        'videos' => Video::query()
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(12, ['*'], 'video_page')
+            ->withQueryString(),
+    ]);
+})->name('media');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.send');

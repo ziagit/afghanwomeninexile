@@ -15,7 +15,7 @@ class GaleryController extends Controller
     {
         return view('admin.galeries.index', [
             'pageTitle' => 'Manage Galeries',
-            'galeries' => Galery::latest()->get(),
+            'galeries' => Galery::latest()->paginate(10)->withQueryString(),
         ]);
     }
 
@@ -72,9 +72,11 @@ class GaleryController extends Controller
     private function validateRequest(Request $request): array
     {
         return $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:25'],
             'details' => ['required', 'string'],
-            'picture' => ['nullable', 'image', 'max:4096'],
+            'picture' => ['nullable', 'image', 'max:1024'],
+        ], [
+            'picture.max' => 'This file size is too large. Please optimize and upload.',
         ]);
     }
 

@@ -23,6 +23,8 @@
                 'title' => $entry->title,
                 'paragraphs' => $paragraphs,
                 'excerpt' => \Illuminate\Support\Str::limit($excerptSource, 240),
+                'image' => $entry->image ? asset('storage/' . $entry->image) : null,
+                'imageAlt' => $entry->title,
             ];
         })
     );
@@ -36,7 +38,11 @@
             @foreach($activities as $entry)
                 <div class="archive-entry">
                     <div class="archive-left">
-                        <x-media-placeholder class="archive-media" label="Photo coming soon" />
+                        @if(!empty($entry['image']))
+                            <img class="archive-media archive-media--image" src="{{ $entry['image'] }}" alt="{{ $entry['imageAlt'] ?? $entry['title'] }}" loading="lazy">
+                        @else
+                            <x-media-placeholder class="archive-media" label="Photo coming soon" />
+                        @endif
                     </div>
                     <div class="archive-text">
                         <div class="archive-tag">{{ $entry['tag'] }}<span class="sub">{{ $entry['sub'] }}</span></div>

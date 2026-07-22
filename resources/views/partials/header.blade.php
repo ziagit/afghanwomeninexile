@@ -1,7 +1,7 @@
 <header data-site-header>
     <div class="nav-wrap">
         <a href="{{ route('home') }}" class="brand" aria-label="AfghanWomenInExile Home">
-            <span class="mark">M</span>
+            <span class="mark"><img src="{{ asset('logo.png') }}" alt="" aria-hidden="true"></span>
             <span class="names">
                 <span class="full">AFGHAN WOMEN</span>
                 <span class="short">In Exile</span>

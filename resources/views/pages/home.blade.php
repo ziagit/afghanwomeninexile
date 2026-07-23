@@ -103,9 +103,10 @@
 
 <section class="cta-band">
     <div class="wrap">
-        <h2>Stand with us.</h2>
-        <p>Every voice raised in support of Afghan women in exile strengthens the case for their protection, dignity, and future.</p>
-        <a class="btn btn-gold" href="{{ route('contact') }}">Contact the Movement</a>
+        <h2>Stand with Afghan women in exile.</h2>
+        <p>Since losing their rights to education, work, and safety, Afghan women in exile are rebuilding their futures — one step at a time. Your donation helps provide shelter, legal support, and education so they can keep moving forward.</p>
+        <p><strong>Your donation is a lifeline.</strong></p>
+        <a class="btn btn-gold" href="https://stripe.com/industries/nonprofits" target="_blank" rel="noopener noreferrer">Donate Now</a>
     </div>
 </section>
 @endsection

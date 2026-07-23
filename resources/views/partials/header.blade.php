@@ -18,6 +18,7 @@
             <a class="toplink {{ request()->routeIs('media') ? 'active' : '' }}" href="{{ route('media') }}">Media</a>
             <a class="toplink {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">About</a>
             <a class="toplink {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">Contact</a>
+            <a class="toplink header-donate" href="https://stripe.com/industries/nonprofits" target="_blank" rel="noopener noreferrer">Donate Now</a>
         </nav>
     </div>
 </header>

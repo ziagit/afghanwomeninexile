@@ -427,10 +427,58 @@ TEXT,
             ],
         ];
 
+        $imageByName = [
+            'Meeting with Richard Bennett' => 'admin/activities/Meeting with UN Special Rapporteur Richard Bennett.webp',
+            'Pakistan Repatriation Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile Regarding the Government of Pakistan’s Decision on the Repatriation of Afghan Refugees.webp',
+            'Children\'s Day Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of International Children’s Day.webp',
+            'Hazara Culture Day' => 'admin/activities/Movement of Afghanistan Women in Exile Commemorates Hazara Culture Day.webp',
+            'Joint Spouses Statement' => 'admin/activities/Joint Statement about Regulation on the Separation of Spouses.webp',
+            'Gender Apartheid Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile Condemning Gender Apartheid, Ethnic and Religious Discrimination, and Exclusionary Policies in Afghanistan.webp',
+            'Academic Year Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of the Beginning of the New Academic Year and the Continued Denial of Education for Afghan Girls.webp',
+            'Nowruz Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of Nowruz.webp',
+            'International Women\'s Day Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of International Women’s Day – 8 March.webp',
+            'Penal Code Statement' => 'admin/activities/Statement by the Movement of Afghanistan Women in Exile on the Taliban’s Penal Code.webp',
+            'Gender Apartheid ICC' => 'admin/activities/Joint Statement Condemning Gender Apartheid, Slavery, and Crimes Against Humanity in Afghanistan.webp',
+            'Yalda Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of Yalda Night.webp',
+            'Human Rights Day Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of Human Rights Day.webp',
+            'Violence Against Women Day' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of the International Day for the Elimination of Violence Against Women – 25 November.webp',
+            'Chadori Hospital Protest' => 'admin/activities/Protest Statement of the Movement of Afghanistan Women in Exile On the Taliban’s Restriction Preventing Women Without a Chadori from Entering Hospitals in Herat.webp',
+            'Peoples Tribunal Support' => 'admin/activities/Joint Statement of 115 Civil Society Organizations, Associations, Human Rights Groups, Protest Movements, and Diaspora Organizations in Support of the People’s Tribunal in Spain.webp',
+            'Maryam Mohammadi Memorial' => 'admin/activities/In Memory of Maryam Mohammadi_ Honoring a Survivor of the Sayed Al-Shuhada School Attack.webp',
+            'Earthquake Condolence' => 'admin/activities/Statement of Condolence and Solidarity by the Movement of Afghanistan Women in Exile.webp',
+            'Teachers Day Statement' => 'admin/activities/Statement of the Women’s Movement of Afghanistan in Exile on the Occasion of Teacher’s Day.webp',
+            'Sima Noori Appreciation' => 'admin/activities/Statement of Appreciation by the Movement of Afghanistan Women in Exile on the Visit of Sima Noori.webp',
+            'Hazara Persecution Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Ongoing Persecution of the Hazara Community.webp',
+            'Democracy Day Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of the International Day of Democracy – 15 September 2025.webp',
+            'Internet Shutdown Protest' => 'admin/activities/Protest Statement of the Women’s Movement of Afghanistan in Exile Regarding the Internet Shutdown by the Taliban in Mazar-e-Sharif!.webp',
+            'Forced Deportation Statement' => 'admin/activities/Official Statement of the Women’s Movement of Afghanistan in ExileRegarding the Forced Deportation of Migrants from Pakistan.webp',
+            'Identity Card Photos Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile on the Taliban’s Decision to Remove Women’s Photographs from National Identity Cards.webp',
+            'Diplomatic Privileges Concern' => 'admin/activities/Concerns Raised Over Reported Diplomatic Privileges for Taliban Affiliated Women Amid Continued Restrictions on Afghan Women.webp',
+            'Green Party Support' => 'admin/activities/Statement of Movement of Afghanistan women in Exile in Solidarity and Support for the Green Party of Afghanistan in Exile.webp',
+            'Fourth Anniversary Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile on the Occasion of the Fourth Anniversary of the Collapse of the Islamic Republic of Afghanistan and the Taliban’s Return to Power.webp',
+            'August 15 Event' => 'admin/activities/Special Event Marking the Fourth Anniversary of the August 15 Developments in Afghanistan, Organized by the Movement of Afghanistan Women in Exile in Pakistan.webp',
+            'Do Not Recognise Taliban' => 'admin/activities/Do not Recognise Taliban.webp',
+            'ICC Taliban Ruling' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Recent Ruling of the International Criminal Court Against Taliban Leaders.webp',
+            'Iran Deportation Response' => 'admin/activities/Statement by the Movement of Afghanistan Women in Exile in Response to the Forced Deportation of Afghan Refugees by the Islamic Republic of Iran.webp',
+            'Women in Diplomacy Statement' => 'admin/activities/Statement by the Afghan Women in Exile Movement On the Occasion of June 24 – International Day of Women in Diplomacy.webp',
+            'Victims of Torture Statement' => 'admin/activities/On the Occasion of June 26 – International Day in Support of Victims of Torture.webp',
+            'World Refugee Day Statement' => 'admin/activities/Statement by the Afghanistan Women Movement in Exile On the Occasion of June 20 – World Refugee Day.webp',
+            'Eid al-Adha Message' => 'admin/activities/Eid al-Adha Message of Congratulations.webp',
+            'Shahr-e-Naw Arrests' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile _ In Response to the Arrest of Girls and Women in Shahr-e-Naw, Kabul.webp',
+            'Open Letter of Civil Society' => 'admin/activities/Official Open Letter of Civil Society Organizations.webp',
+            'University Entrance Results Statement' => 'admin/activities/Statement of Movement of Afghanistan Women in Exile on the Announcement of the National University Entrance Examination Results Without the Participation of Women.webp',
+            'Taliban Supporter Quote' => 'admin/activities/Taliban Supporter’s Justification for the Arrest of Women_ “A Woman Has No Right to Look at the Road with Both Eyes”.webp',
+            'Forest Inspiration' => 'admin/activities/Inspiration from the Forest for the Women of Afghanistan.webp',
+            'Flag Day Statement' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile On the Occasion of Afghanistan’s Three color Flag Day.webp',
+            'World Refugee Day 2025' => 'admin/activities/Joint Statement on the Occasion of World Refugee Day20 June 2025.webp',
+            'Kobra Rezai Death' => 'admin/activities/Statement of the Movement of Afghanistan Women in Exile on the Death of Kobra Rezai.webp',
+            'Inauguration Party' => 'admin/activities/Inauguration party of Movement of Afghanistan women in exile.webp',
+        ];
+
         foreach ($activities as $activity) {
             Activity::query()->updateOrCreate(
                 ['title' => $activity['title']],
-                $activity + ['image' => null]
+                $activity + ['image' => $imageByName[$activity['name']] ?? null]
             );
         }
     }

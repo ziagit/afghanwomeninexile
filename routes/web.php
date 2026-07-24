@@ -15,12 +15,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 Route::get('/', function () {
-    $featuredActivity = Activity::query()->latest()->first();
-    $featuredPosts = Activity::query()
+    $latestActivities = Activity::query()
+        ->orderByDesc('created_at')
         ->orderByDesc('id')
-        ->skip(1)
-        ->take(3)
+        ->take(4)
         ->get();
+    $featuredActivity = $latestActivities->first();
+    $featuredPosts = $latestActivities->slice(1)->values();
 
     $featuredObservance = null;
 
@@ -66,7 +67,8 @@ Route::get('/', function () {
 
 Route::get('/activities', function () {
     $activities = Activity::query()
-        ->orderBy('id')
+        ->orderByDesc('created_at')
+        ->orderByDesc('id')
         ->paginate(10);
 
     $activities->getCollection()->transform(function (Activity $activity) {

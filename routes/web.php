@@ -144,6 +144,10 @@ Route::get('/verify-member', [VerificationController::class, 'index'])->name('ve
 
 Route::get('/login', [AuthController::class, 'create'])->name('login');
 Route::post('/login', [AuthController::class, 'store'])->name('login.store');
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::post('/logout', [AuthController::class, 'destroy'])
     ->middleware('auth')
@@ -151,6 +155,8 @@ Route::post('/logout', [AuthController::class, 'destroy'])
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/account', [AuthController::class, 'account'])->name('account');
+    Route::put('/account', [AuthController::class, 'updateAccount'])->name('account.update');
 
     Route::resource('activities', ActivityController::class)->except(['show']);
     Route::resource('galeries', GaleryController::class)->except(['show']);

@@ -3,7 +3,10 @@
 @section('content')
 @php
     if (! isset($activities)) {
-        $activities = \App\Models\Activity::query()->orderBy('id')->paginate(10);
+        $activities = \App\Models\Activity::query()
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(10);
     }
 
     $activities->setCollection(

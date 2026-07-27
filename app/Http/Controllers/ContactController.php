@@ -26,8 +26,17 @@ class ContactController extends Controller
             'message' => ['required', 'string', 'max:5000'],
         ]);
 
-        Mail::to(config('mail.contact.address'), config('mail.contact.name'))
-            ->send(new ContactMessage($data));
+        try {
+            Mail::to(config('mail.contact.address'), config('mail.contact.name'))
+                ->send(new ContactMessage($data));
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return redirect()
+                ->route('contact')
+                ->withInput()
+                ->with('error', 'We could not send your message right now. Please try again later.');
+        }
 
         return redirect()
             ->route('contact')

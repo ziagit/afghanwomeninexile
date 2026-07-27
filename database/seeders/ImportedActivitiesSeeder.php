@@ -475,11 +475,17 @@ TEXT,
             'Inauguration Party' => 'admin/activities/Inauguration party of Movement of Afghanistan women in exile.webp',
         ];
 
-        foreach ($activities as $activity) {
-            Activity::query()->updateOrCreate(
+        $seededAt = now();
+
+        foreach ($activities as $index => $activity) {
+            $record = Activity::query()->updateOrCreate(
                 ['title' => $activity['title']],
                 $activity + ['image' => $imageByName[$activity['name']] ?? null]
             );
+
+            // Keep the seeded array order as the canonical newest-to-oldest order.
+            $record->created_at = $seededAt->copy()->subSeconds($index);
+            $record->saveQuietly();
         }
     }
 }

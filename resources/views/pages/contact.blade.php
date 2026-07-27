@@ -54,6 +54,9 @@
                 @if(session('status'))
                     <p class="form-note">{{ session('status') }}</p>
                 @endif
+                @if(session('error'))
+                    <p class="field-error">{{ session('error') }}</p>
+                @endif
                 <div>
                     <button type="submit" class="btn btn-brick">Submit</button>
                     <div id="formStatus"></div>

@@ -124,6 +124,7 @@
             <div class="latest-event-details">
                 <span class="eyebrow">Event</span>
                 <h3>{{ $latestEvent->name ?: $latestEvent->title }}</h3>
+                <p class="latest-event-description">{{ \Illuminate\Support\Str::limit(strip_tags($latestEvent->body), 210) }}</p>
                 <a class="latest-event-recap" href="{{ route('activities.show', $latestEvent->id) }}">Read recap <span aria-hidden="true">→</span></a>
             </div>
         </article>

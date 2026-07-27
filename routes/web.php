@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 
 Route::get('/', function () {
     $latestActivities = Activity::query()
+        ->where('type', '!=', 'event')
         ->orderByDesc('created_at')
         ->orderByDesc('id')
         ->take(4)

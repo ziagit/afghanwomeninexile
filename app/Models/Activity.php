@@ -13,4 +13,11 @@ class Activity extends Model
         'body',
         'image',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Activity $activity): void {
+            $activity->type = $activity->type ?: 'general';
+        });
+    }
 }

@@ -101,6 +101,36 @@
     </div>
 </section>
 
+@if ($latestEvent)
+<section class="latest-event-section">
+    <div class="wrap">
+        <div class="posts-head latest-event-head">
+            <h2 style="font-size:1.8rem">Latest event</h2>
+            <a class="latest-event-all" href="{{ route('activities') }}">View all events <span aria-hidden="true">→</span></a>
+        </div>
+        <article class="latest-event-card">
+            <div class="latest-event-media ph{{ $latestEvent->image ? ' latest-event-media--image' : '' }}" aria-label="Photo placeholder">
+                <div class="latest-event-date">
+                    <strong>{{ optional($latestEvent->created_at)->format('d') }}</strong>
+                    <span>{{ strtoupper(optional($latestEvent->created_at)->format('M')) }}</span>
+                </div>
+                @if ($latestEvent->image)
+                    <img src="{{ asset('storage/'.$latestEvent->image) }}" alt="{{ $latestEvent->title }}" class="latest-event-image">
+                @else
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7.2 14l2.6-2.6 2.2 2.2 3.2-3.8 3.8 4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.2" fill="currentColor"/></svg>
+                    <span>Photo placeholder</span>
+                @endif
+            </div>
+            <div class="latest-event-details">
+                <span class="eyebrow">Event</span>
+                <h3>{{ $latestEvent->name ?: $latestEvent->title }}</h3>
+                <a class="latest-event-recap" href="{{ route('activities.show', $latestEvent->id) }}">Read recap <span aria-hidden="true">→</span></a>
+            </div>
+        </article>
+    </div>
+</section>
+@endif
+
 <section class="cta-band">
     <div class="wrap">
         <h2>Stand with Afghan women in exile.</h2>

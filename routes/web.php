@@ -22,6 +22,11 @@ Route::get('/', function () {
         ->get();
     $featuredActivity = $latestActivities->first();
     $featuredPosts = $latestActivities->slice(1)->values();
+    $latestEventRecord = Activity::query()
+        ->where('type', 'event')
+        ->orderByDesc('created_at')
+        ->orderByDesc('id')
+        ->first();
 
     $featuredObservance = null;
 
@@ -62,6 +67,7 @@ Route::get('/', function () {
         'metaDescription' => 'MAWIE - The Movement of Afghan women in Exile. Advancing human rights, gender equality, and the protection of Afghan women through peaceful advocacy, education, and international cooperation.',
         'featuredPosts' => $featuredPosts,
         'featuredObservance' => $featuredObservance,
+        'latestEvent' => $latestEventRecord,
     ]);
 })->name('home');
 

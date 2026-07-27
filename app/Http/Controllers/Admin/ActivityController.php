@@ -38,13 +38,14 @@ class ActivityController extends Controller
     {
         return view('admin.activities.create', [
             'pageTitle' => 'Create Activity',
-            'activity' => new Activity(),
+            'activity' => new Activity(['type' => 'general']),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $data = $this->validateRequest($request);
+        $data['type'] = $data['type'] ?: 'general';
         $data['image'] = $this->storeImage($request);
 
         Activity::create($data);
@@ -63,6 +64,7 @@ class ActivityController extends Controller
     public function update(Request $request, Activity $activity): RedirectResponse
     {
         $data = $this->validateRequest($request);
+        $data['type'] = $data['type'] ?: 'general';
 
         if ($request->hasFile('image')) {
             $this->deleteImage($activity->image);
@@ -88,7 +90,7 @@ class ActivityController extends Controller
     {
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'string', 'max:255'],
+            'type' => ['nullable', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
             'body' => ['required', 'string'],
             'image' => ['nullable', 'image', 'max:1024'],

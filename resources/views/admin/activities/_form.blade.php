@@ -1,4 +1,7 @@
-@php($isEdit = $activity->exists)
+@php
+    $isEdit = $activity->exists;
+    $selectedType = old('type', $activity->type ?: 'general');
+@endphp
 <form class="admin-form" method="post" action="{{ $isEdit ? route('admin.activities.update', $activity) : route('admin.activities.store') }}" enctype="multipart/form-data">
     @csrf
     @if ($isEdit)
@@ -12,8 +15,14 @@
             @error('name')<span class="field-error">{{ $message }}</span>@enderror
         </div>
         <div class="field">
-            <label for="type">Type</label>
-            <input id="type" name="type" type="text" value="{{ old('type', $activity->type) }}" required>
+            <label for="type">Tag</label>
+            <select id="type" name="type" required>
+                <option value="general" @selected($selectedType === 'general')>General</option>
+                <option value="event" @selected($selectedType === 'event')>Event</option>
+                @if (! in_array($selectedType, ['general', 'event'], true))
+                    <option value="{{ $selectedType }}" selected>{{ \Illuminate\Support\Str::headline($selectedType) }} (legacy)</option>
+                @endif
+            </select>
             @error('type')<span class="field-error">{{ $message }}</span>@enderror
         </div>
     </div>

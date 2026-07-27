@@ -21,7 +21,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Type</th>
+                    <th>Tag</th>
                     <th>Title</th>
                     <th>Image</th>
                     <th>Actions</th>

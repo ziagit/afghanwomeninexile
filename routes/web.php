@@ -170,6 +170,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('galeries', GaleryController::class)->except(['show']);
     Route::resource('verifications', AdminVerificationController::class)->except(['show']);
     Route::get('verifications/{verification}/card', [MemberCardController::class, 'show'])->name('verifications.card');
-    Route::get('verifications/{verification}/card.pdf', [MemberCardController::class, 'pdf'])->name('verifications.card.pdf');
+    Route::get('verifications/{verification}/card/{side}.png', [MemberCardController::class, 'image'])
+        ->whereIn('side', ['front', 'back'])
+        ->name('verifications.card.image');
     Route::resource('videos', VideoController::class)->except(['show']);
 });

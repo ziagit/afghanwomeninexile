@@ -1,25 +1,48 @@
 @extends('layouts.admin')
 
 @section('content')
-<section class="admin-card">
+@php
+    $sides = ['front' => 'Front', 'back' => 'Back'];
+    $downloads = collect(array_keys($sides))
+        ->map(fn ($side) => route('admin.verifications.card.image', [$verification, $side, 'download' => 1]))
+        ->all();
+@endphp
+<section class="admin-card member-card-page">
     <div class="section-head">
-        <h2>Member Card · {{ $verification->first_name }} {{ $verification->last_name }}</h2>
-        <a href="{{ route('admin.verifications.index') }}">Back to list</a>
+        <h2>{{ $verification->first_name }} {{ $verification->last_name }}</h2>
+        <a href="{{ route('admin.verifications.index') }}">Back to members</a>
     </div>
 
-    <p class="member-card-help">Standard ID card size: 54 × 85.6 mm (CR80), portrait. Page 1 is the front, page 2 is the back.</p>
-
-    <div class="member-card-actions">
-        <a class="btn btn-brick" href="{{ route('admin.verifications.card.pdf', $verification) }}">Download for card printer</a>
-        <a class="btn member-card-edit" href="{{ route('admin.verifications.card.pdf', [$verification, 'version' => 'press']) }}">Download for print shop</a>
-        <a class="btn member-card-edit" href="{{ route('admin.verifications.edit', $verification) }}">Edit member</a>
+    <div class="member-card-sides">
+        @foreach ($sides as $side => $label)
+            <figure>
+                <img src="{{ route('admin.verifications.card.image', [$verification, $side]) }}" alt="{{ $label }} of member card" width="1276" height="2022">
+                <figcaption>{{ $label }}</figcaption>
+            </figure>
+        @endforeach
     </div>
 
-    <ul class="member-card-tips">
-        <li><strong>Card printer</strong> (PVC card printer): the PDF is exactly card size. Choose the CR80 card size in the printer settings and print at <strong>Actual size / 100%</strong>. Never use "Fit to page".</li>
-        <li><strong>Print shop</strong>: the PDF has 3 mm bleed and crop marks. Ask them to cut along the crop marks.</li>
-    </ul>
-
-    <iframe class="member-card-preview" src="{{ route('admin.verifications.card.pdf', [$verification, 'inline' => 1]) }}" title="Member card preview"></iframe>
+    <div class="member-card-download">
+        <button type="button" class="btn btn-brick" id="member-card-download"
+            data-files='@json($downloads)'>
+            Download card
+        </button>
+        <p>2 PNG files (front and back) · 54 × 85.6 mm at 600 DPI · print at 100%</p>
+    </div>
 </section>
+
+<script>
+    document.getElementById('member-card-download').addEventListener('click', function () {
+        JSON.parse(this.dataset.files).forEach(function (url, index) {
+            setTimeout(function () {
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = '';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            }, index * 600);
+        });
+    });
+</script>
 @endsection

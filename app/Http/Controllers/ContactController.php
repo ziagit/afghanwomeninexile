@@ -13,8 +13,8 @@ class ContactController extends Controller
     public function create(): View
     {
         return view('pages.contact', [
-            'pageTitle' => 'Contact',
-            'metaDescription' => 'Feel free to contact us regarding our activities and to get involved.',
+            'pageTitle' => __('Contact'),
+            'metaDescription' => __('Feel free to contact us regarding our activities and to get involved.'),
         ]);
     }
 
@@ -35,11 +35,11 @@ class ContactController extends Controller
             return redirect()
                 ->route('contact')
                 ->withInput()
-                ->with('error', 'We could not send your message right now. Please try again later.');
+                ->with('error', __('We could not send your message right now. Please try again later.'));
         }
 
         return redirect()
             ->route('contact')
-            ->with('status', 'Thank you. Your message has been sent successfully.');
+            ->with('status', __('Thank you. Your message has been sent successfully.'));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Verification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,11 +13,39 @@ use Illuminate\View\View;
 
 class VerificationController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $filters = [
+            'q' => $request->string('q')->trim()->toString(),
+            'status' => $request->string('status')->toString(),
+            'location' => $request->string('location')->toString(),
+            'expiring' => $request->boolean('expiring'),
+        ];
+
+        $verifications = Verification::query()
+            ->when($filters['q'] !== '', function (Builder $query) use ($filters) {
+                $term = '%'.$filters['q'].'%';
+                $query->where(fn (Builder $query) => $query
+                    ->where('member_id', 'like', $term)
+                    ->orWhere('location', 'like', $term)
+                    ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", [$term]));
+            })
+            ->when($filters['status'] !== '', fn (Builder $query) => $query->withStatus($filters['status']))
+            ->when($filters['location'] !== '', fn (Builder $query) => $query->where('location', $filters['location']))
+            ->when($filters['expiring'], fn (Builder $query) => $query
+                ->withStatus(Verification::STATUS_ACTIVE)
+                ->whereBetween('expirs_at', [now()->startOfDay(), now()->addDays(30)->endOfDay()])
+                ->reorder('expirs_at'))
+            ->latest()
+            ->paginate(25)
+            ->withQueryString();
+
         return view('admin.verifications.index', [
             'pageTitle' => 'Manage Members',
-            'verifications' => Verification::latest()->get(),
+            'verifications' => $verifications,
+            'filters' => $filters,
+            'locations' => Verification::query()->distinct()->orderBy('location')->pluck('location'),
+            'total' => Verification::count(),
         ]);
     }
 
@@ -68,6 +97,28 @@ class VerificationController extends Controller
         $verification->delete();
 
         return redirect()->route('admin.verifications.index')->with('status', 'Member deleted successfully.');
+    }
+
+    public function revoke(Request $request, Verification $verification): RedirectResponse
+    {
+        $data = $request->validate([
+            'revoked_reason' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $verification->revoked_at = now();
+        $verification->revoked_reason = $data['revoked_reason'] ?? null;
+        $verification->save();
+
+        return redirect()->route('admin.verifications.edit', $verification)->with('status', 'Membership revoked. The card now shows as revoked when checked.');
+    }
+
+    public function restore(Verification $verification): RedirectResponse
+    {
+        $verification->revoked_at = null;
+        $verification->revoked_reason = null;
+        $verification->save();
+
+        return redirect()->route('admin.verifications.edit', $verification)->with('status', 'Membership restored.');
     }
 
     private function validateRequest(Request $request, ?Verification $verification = null): array

@@ -112,6 +112,15 @@ return [
             'text' => "A joint statement marking International Women's Day and reaffirming the movement's commitment to Afghan women's rights.",
         ],
     ],
+    // Support Us page. Each section only appears once it is filled in.
+    'support' => [
+        // Link to the online donation page (PayPal, GoFundMe, Stripe, ...).
+        'donation_url' => env('MAWIE_DONATION_URL'),
+
+        // Bank transfer details, shown as label => value, e.g. 'Account name' => 'Movement of Afghan Women in Exile'.
+        'bank_details' => [],
+    ],
+
     'about_blocks' => [
         [
             'eyebrow' => 'Mission',

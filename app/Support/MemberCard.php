@@ -45,7 +45,8 @@ class MemberCard
 
     public function __construct(
         private Verification $verification,
-        private string $verifyUrl,
+        private string $qrUrl,
+        private string $lookupUrl,
     ) {}
 
     // e.g. "shaima-rezaei-mawe-00131-2026-front.png" (non-Latin names are transliterated by Str::slug).
@@ -107,7 +108,7 @@ class MemberCard
     public function back(): string
     {
         $card = $this->canvas('plum-dark');
-        $verifyAddress = preg_replace('#^https?://#', '', strtok($this->verifyUrl, '?'));
+        $verifyAddress = preg_replace('#^https?://#', '', $this->lookupUrl);
 
         $this->logo($card, 18, 9, 18);
         $this->text($card, 'Movement of Afghan', 'serif', 10, 'parchment', 27, 33.4, 'center');
@@ -333,7 +334,7 @@ class MemberCard
             'eccLevel' => EccLevel::M,
             'addQuietzone' => true,
             'quietzoneSize' => 2,
-        ])))->addByteSegment($this->verifyUrl)->getQRMatrix();
+        ])))->addByteSegment($this->qrUrl)->getQRMatrix();
 
         $modules = $matrix->getSize();
         $box = $this->px($size);

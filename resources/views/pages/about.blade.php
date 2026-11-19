@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<x-page-hero eyebrow="About" title="About Us" description="Who we are, what we work toward, and the principles that guide us." />
+<x-page-hero :eyebrow="__('About')" :title="__('About Us')" :description="__('Who we are, what we work toward, and the principles that guide us.')" />
 
 <section class="tight">
     <div class="wrap">
         @foreach($aboutBlocks as $block)
             <div class="value-block">
-                <span class="eyebrow">{{ $block['eyebrow'] }}</span>
+                <span class="eyebrow">{{ __($block['eyebrow']) }}</span>
                 <div>
-                    <h3>{{ $block['title'] }}</h3>
-                    <p>{{ $block['text'] }}</p>
+                    <h3>{{ __($block['title']) }}</h3>
+                    <p>{{ __($block['text']) }}</p>
                     @if($block['image'])
                         <div class="ph team-ph team-ph--image">
-                            <img src="{{ asset('images/our-team.avif') }}" alt="Our team" class="team-ph__img">
+                            <img src="{{ asset('images/our-team.avif') }}" alt="{{ __('Our team') }}" class="team-ph__img">
                         </div>
                     @endif
                 </div>
@@ -26,16 +26,16 @@
     <div class="wrap founder-grid">
         <div class="portrait" style="background-image:url('/images/farzana.avif'); background-size:cover; background-position:center top; background-repeat:no-repeat">
             <div class="cap">
-                <div class="name">Farzana Rezaei</div>
-                <div class="role">Founder &amp; Director</div>
+                <div class="name">{{ __('Farzana Rezaei') }}</div>
+                <div class="role">{{ __('Founder & Director') }}</div>
             </div>
         </div>
         <div>
-            <span class="eyebrow">About the Founder</span>
-            <blockquote class="pull" style="margin-top:22px">"No lasting change could happen without the conscious and active participation of women."</blockquote>
-            <p class="bio">Farzana Rezaei, a woman of resilience, born in 1993, holds a bachelor's degree in law and has dedicated her life to defending justice, empowering women, and serving her community. Farzana, the founder and director of the logistics company "Banu Rezaei," became a shining example of women's ability to thrive in entrepreneurship, even under the difficult circumstances of Afghanistan.</p>
-            <p class="bio">Alongside her professional success, Farzana founded the Afghan Women's Union - a platform for connection, support, and a strong voice for women who had long been marginalized. By establishing the Fayeq Institute of Higher Education, Farzana once again proved that education is the heartbeat of transformation. During the time of the Republic, she served as a legal advocate for three years and was actively involved in human rights and civil society.</p>
-            <p class="bio">Forced into exile after the Taliban regained control of Afghanistan, Farzana Rezaei courageously stood at the forefront of women's and girls' protests. She condemned the Taliban's crimes, including targeted killings, systematic suppression of minorities, and the ban on girls' education. Now, even in exile, Farzana continues the path of advocacy - she founded the "Women's Rights and Human Rights Movement" and publishes a journal titled "Women in Exile."</p>
+            <span class="eyebrow">{{ __('About the Founder') }}</span>
+            <blockquote class="pull" style="margin-top:22px">{{ __('"No lasting change could happen without the conscious and active participation of women."') }}</blockquote>
+            <p class="bio">{{ __('Farzana Rezaei, a woman of resilience, born in 1993, holds a bachelor\'s degree in law and has dedicated her life to defending justice, empowering women, and serving her community. Farzana, the founder and director of the logistics company "Banu Rezaei," became a shining example of women\'s ability to thrive in entrepreneurship, even under the difficult circumstances of Afghanistan.') }}</p>
+            <p class="bio">{{ __('Alongside her professional success, Farzana founded the Afghan Women\'s Union - a platform for connection, support, and a strong voice for women who had long been marginalized. By establishing the Fayeq Institute of Higher Education, Farzana once again proved that education is the heartbeat of transformation. During the time of the Republic, she served as a legal advocate for three years and was actively involved in human rights and civil society.') }}</p>
+            <p class="bio">{{ __('Forced into exile after the Taliban regained control of Afghanistan, Farzana Rezaei courageously stood at the forefront of women\'s and girls\' protests. She condemned the Taliban\'s crimes, including targeted killings, systematic suppression of minorities, and the ban on girls\' education. Now, even in exile, Farzana continues the path of advocacy - she founded the "Women\'s Rights and Human Rights Movement" and publishes a journal titled "Women in Exile."') }}</p>
         </div>
     </div>
 </section>

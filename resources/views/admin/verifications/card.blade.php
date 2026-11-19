@@ -32,6 +32,17 @@
         </button>
         <p>2 PNG files (front and back) · 54 × 85.6 mm at 600 DPI · print at 100%</p>
     </div>
+
+    <div class="member-card-replace">
+        <div>
+            <strong>Card lost or stolen?</strong>
+            <p>Replacing the card gives it a new QR code. The old card will show as "no longer valid" when scanned.@if (count($verification->replaced_card_tokens ?? [])) This member's card has been replaced {{ count($verification->replaced_card_tokens) }} {{ Str::plural('time', count($verification->replaced_card_tokens)) }}.@endif</p>
+        </div>
+        <form method="post" action="{{ route('admin.verifications.card.replace', $verification) }}" onsubmit="return confirm('Replace this card? The current printed card will stop verifying.');">
+            @csrf
+            <button type="submit" class="btn btn-outline-dark">Replace card</button>
+        </form>
+    </div>
 </section>
 
 <script>

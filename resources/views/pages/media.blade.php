@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-<x-page-hero eyebrow="Media" title="Gallery" description="Photographs from events, commemorations, and meetings will be published here as they become available." media="true" />
+<x-page-hero :eyebrow="__('Media')" :title="__('Gallery')" :description="__('Photographs from events, commemorations, and meetings will be published here as they become available.')" media="true" />
 
 <section>
     <div class="wrap" data-media-root>
         <div class="media-sub-nav">
-            <button type="button" data-media-tab="videos" data-media-title="Short Videos" data-media-description="Video statements, event footage, and interviews will be published here as they become available.">Short Videos</button>
-            <button type="button" class="active" data-media-tab="gallery" data-media-title="Gallery" data-media-description="Photographs from events, commemorations, and meetings will be published here as they become available.">Gallery</button>
+            <button type="button" data-media-tab="videos" data-media-title="{{ __('Short Videos') }}" data-media-description="{{ __('Video statements, event footage, and interviews will be published here as they become available.') }}">{{ __('Short Videos') }}</button>
+            <button type="button" class="active" data-media-tab="gallery" data-media-title="{{ __('Gallery') }}" data-media-description="{{ __('Photographs from events, commemorations, and meetings will be published here as they become available.') }}">{{ __('Gallery') }}</button>
         </div>
 
         <div class="media-grid" data-media-panel="videos" hidden>
@@ -16,7 +16,7 @@
                     class="video-card video-card--interactive"
                     tabindex="0"
                     role="button"
-                    aria-label="Play {{ $video->name }}"
+                    aria-label="{{ __('Play :title', ['title' => $video->name]) }}"
                     data-video-item
                     data-video-link="{{ $video->video_link }}"
                 >
@@ -24,7 +24,7 @@
                         @if($video->thumbnail)
                             <img class="video-card__thumbnail" src="{{ asset('storage/' . $video->thumbnail) }}" alt="{{ $video->name }}" loading="lazy">
                         @else
-                            <x-media-placeholder class="video-card__placeholder" kind="video" label="Watch video" />
+                            <x-media-placeholder class="video-card__placeholder" kind="video" :label="__('Watch video')" />
                         @endif
                         <span class="video-card__play" aria-hidden="true">▶</span>
                     </div>
@@ -33,17 +33,17 @@
                     </div>
                 </article>
             @empty
-                <p class="media-empty">No short videos are available yet.</p>
+                <p class="media-empty">{{ __('No short videos are available yet.') }}</p>
             @endforelse
         </div>
         @if ($videos->hasPages())
             @php($videos->appends(['media' => 'videos']))
             <div class="archive-pagination media-pagination" data-media-panel="videos">
-                <div class="pagination-strip" aria-label="Short videos pagination">
+                <div class="pagination-strip" aria-label="{{ __('Short videos pagination') }}">
                     @if ($videos->onFirstPage())
-                        <span class="pagination-btn is-disabled" aria-disabled="true">Prev</span>
+                        <span class="pagination-btn is-disabled" aria-disabled="true">{{ __('Prev') }}</span>
                     @else
-                        <a class="pagination-btn" href="{{ $videos->previousPageUrl() }}">Prev</a>
+                        <a class="pagination-btn" href="{{ $videos->previousPageUrl() }}">{{ __('Prev') }}</a>
                     @endif
 
                     @php($videoStartPage = max(1, min($videos->currentPage() - 1, $videos->lastPage() - 2)))
@@ -57,9 +57,9 @@
                     @endfor
 
                     @if ($videos->hasMorePages())
-                        <a class="pagination-btn" href="{{ $videos->nextPageUrl() }}">Next</a>
+                        <a class="pagination-btn" href="{{ $videos->nextPageUrl() }}">{{ __('Next') }}</a>
                     @else
-                        <span class="pagination-btn is-disabled" aria-disabled="true">Next</span>
+                        <span class="pagination-btn is-disabled" aria-disabled="true">{{ __('Next') }}</span>
                     @endif
                 </div>
             </div>
@@ -72,7 +72,7 @@
                     @if($galery->picture)
                         tabindex="0"
                         role="button"
-                        aria-label="View {{ $galery->name }}"
+                        aria-label="{{ __('View :title', ['title' => $galery->name]) }}"
                         data-gallery-item
                         data-gallery-image="{{ asset('storage/' . $galery->picture) }}"
                         data-gallery-title="{{ $galery->name }}"
@@ -86,7 +86,7 @@
                             loading="lazy"
                         >
                     @else
-                        <x-media-placeholder class="gallery-card__placeholder" label="Photo unavailable" />
+                        <x-media-placeholder class="gallery-card__placeholder" :label="__('Photo unavailable')" />
                     @endif
 
                     <div class="gallery-card__body">
@@ -94,17 +94,17 @@
                     </div>
                 </article>
             @empty
-                <p class="media-empty">No gallery photographs are available yet.</p>
+                <p class="media-empty">{{ __('No gallery photographs are available yet.') }}</p>
             @endforelse
         </div>
         @if ($galeries->hasPages())
             @php($galeries->appends(['media' => 'gallery']))
             <div class="archive-pagination media-pagination" data-media-panel="gallery">
-                <div class="pagination-strip" aria-label="Gallery pagination">
+                <div class="pagination-strip" aria-label="{{ __('Gallery pagination') }}">
                     @if ($galeries->onFirstPage())
-                        <span class="pagination-btn is-disabled" aria-disabled="true">Prev</span>
+                        <span class="pagination-btn is-disabled" aria-disabled="true">{{ __('Prev') }}</span>
                     @else
-                        <a class="pagination-btn" href="{{ $galeries->previousPageUrl() }}">Prev</a>
+                        <a class="pagination-btn" href="{{ $galeries->previousPageUrl() }}">{{ __('Prev') }}</a>
                     @endif
 
                     @php($galleryStartPage = max(1, min($galeries->currentPage() - 1, $galeries->lastPage() - 2)))
@@ -118,28 +118,28 @@
                     @endfor
 
                     @if ($galeries->hasMorePages())
-                        <a class="pagination-btn" href="{{ $galeries->nextPageUrl() }}">Next</a>
+                        <a class="pagination-btn" href="{{ $galeries->nextPageUrl() }}">{{ __('Next') }}</a>
                     @else
-                        <span class="pagination-btn is-disabled" aria-disabled="true">Next</span>
+                        <span class="pagination-btn is-disabled" aria-disabled="true">{{ __('Next') }}</span>
                     @endif
                 </div>
             </div>
         @endif
 
-        <dialog class="video-dialog" data-video-dialog aria-label="Video player">
+        <dialog class="video-dialog" data-video-dialog aria-label="{{ __('Video player') }}">
             <div class="video-dialog__inner">
-                <button class="gallery-dialog__close" type="button" data-video-close aria-label="Close video">
+                <button class="gallery-dialog__close" type="button" data-video-close aria-label="{{ __('Close video') }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <div class="video-dialog__frame">
-                    <iframe data-video-dialog-frame src="" title="Video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    <iframe data-video-dialog-frame src="" title="{{ __('Video player') }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
         </dialog>
 
-        <dialog class="gallery-dialog" data-gallery-dialog aria-label="Gallery image">
+        <dialog class="gallery-dialog" data-gallery-dialog aria-label="{{ __('Gallery image') }}">
             <div class="gallery-dialog__inner">
-                <button class="gallery-dialog__close" type="button" data-gallery-close aria-label="Close image">
+                <button class="gallery-dialog__close" type="button" data-gallery-close aria-label="{{ __('Close image') }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <div class="gallery-dialog__image-wrap">

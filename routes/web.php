@@ -33,15 +33,14 @@ Route::get('/', function () {
     $featuredObservance = null;
 
     if ($featuredActivity) {
-        $paragraphs = preg_split("/\R{2,}/", trim((string) $featuredActivity->body)) ?: [];
-        $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
+        $paragraphs = array_slice($featuredActivity->paragraphs(), 0, 2);
         $image = $featuredActivity->image ? asset('storage/' . $featuredActivity->image) : null;
 
         $featuredObservance = [
-            'stampDay' => Str::upper(Str::substr(Str::headline((string) $featuredActivity->type), 0, 2)),
-            'stampRest' => $featuredActivity->name ?: 'Latest activity',
+            'stampDay' => Str::upper(Str::substr($featuredActivity->typeLabel(), 0, 2)),
+            'stampRest' => $featuredActivity->name ?: __('Latest activity'),
             'eventName' => $featuredActivity->name ?: $featuredActivity->title,
-            'paragraphs' => array_slice($paragraphs, 0, 2),
+            'paragraphs' => $paragraphs,
             'image' => $image,
             'imageAlt' => $featuredActivity->title,
             'link' => route('activities.show', $featuredActivity->id),
@@ -49,13 +48,11 @@ Route::get('/', function () {
     }
 
     $featuredPosts = $featuredPosts->map(function (Activity $activity) {
-        $paragraphs = preg_split("/\R{2,}/", trim((string) $activity->body)) ?: [];
-        $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
-        $excerptSource = implode(' ', array_slice($paragraphs, 0, 2));
+        $excerptSource = implode(' ', array_slice($activity->paragraphs(), 0, 2));
 
         return [
             'kind' => 'photo',
-            'tag' => Str::headline((string) $activity->type),
+            'tag' => $activity->typeLabel(),
             'title' => $activity->name ?: $activity->title,
             'text' => Str::limit($excerptSource, 180),
             'image' => $activity->image ? asset('storage/' . $activity->image) : null,
@@ -64,12 +61,21 @@ Route::get('/', function () {
         ];
     });
 
+    $latestEvent = $latestEventRecord ? [
+        'id' => $latestEventRecord->id,
+        'date' => $latestEventRecord->created_at,
+        'image' => $latestEventRecord->image ? asset('storage/'.$latestEventRecord->image) : null,
+        'title' => $latestEventRecord->name ?: $latestEventRecord->title,
+        'imageAlt' => $latestEventRecord->title,
+        'text' => Str::limit(strip_tags($latestEventRecord->body), 210),
+    ] : null;
+
     return view('pages.home', [
         'pageTitle' => null,
-        'metaDescription' => 'MAWIE - The Movement of Afghan women in Exile. Advancing human rights, gender equality, and the protection of Afghan women through peaceful advocacy, education, and international cooperation.',
+        'metaDescription' => __('MAWIE - The Movement of Afghan women in Exile. Advancing human rights, gender equality, and the protection of Afghan women through peaceful advocacy, education, and international cooperation.'),
         'featuredPosts' => $featuredPosts,
         'featuredObservance' => $featuredObservance,
-        'latestEvent' => $latestEventRecord,
+        'latestEvent' => $latestEvent,
     ]);
 })->name('home');
 
@@ -80,75 +86,92 @@ Route::get('/activities', function () {
         ->paginate(10);
 
     $activities->getCollection()->transform(function (Activity $activity) {
-        $paragraphs = preg_split("/\R{2,}/", trim((string) $activity->body)) ?: [];
-        $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
-        $excerptSource = implode(' ', array_slice($paragraphs, 0, 2));
+        $paragraphs = array_slice($activity->paragraphs(), 0, 2);
 
         return [
             'id' => $activity->id,
-            'tag' => Str::headline((string) $activity->type),
-            'sub' => $activity->name ?: 'Advocacy',
+            'tag' => $activity->typeLabel(),
+            'sub' => $activity->name ?: __('Advocacy'),
             'title' => $activity->title,
             'paragraphs' => $paragraphs,
-            'excerpt' => Str::limit($excerptSource, 240),
+            'excerpt' => Str::limit(implode(' ', $paragraphs), 240),
             'image' => $activity->image ? asset('storage/' . $activity->image) : null,
             'imageAlt' => $activity->title,
         ];
     });
 
     return view('pages.activities', [
-        'pageTitle' => 'Activities',
-        'metaDescription' => "A chronological record of MAWIE's public statements, commemorations, and engagements - a plainspoken account of what we've raised our voice on, and when.",
+        'pageTitle' => __('Activities'),
+        'metaDescription' => __("A chronological record of MAWIE's public statements, commemorations, and engagements - a plainspoken account of what we've raised our voice on, and when."),
         'activities' => $activities,
     ]);
 })->name('activities');
 
 Route::get('/activities/{activity}', function (Activity $activity) {
-    $paragraphs = preg_split("/\R{2,}/", trim((string) $activity->body)) ?: [];
-    $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
+    $paragraphs = $activity->paragraphs();
+    $title = $activity->title;
 
     return view('pages.activity', [
-        'pageTitle' => $activity->title,
-        'metaDescription' => Str::limit(strip_tags($activity->body), 160),
+        'pageTitle' => $title,
+        'metaDescription' => Str::limit(implode(' ', $paragraphs), 160),
         'activity' => [
             'id' => $activity->id,
-            'tag' => Str::headline((string) $activity->type),
-            'sub' => $activity->name ?: 'Advocacy',
-            'title' => $activity->title,
+            'tag' => $activity->typeLabel(),
+            'sub' => $activity->name ?: __('Advocacy'),
+            'title' => $title,
             'paragraphs' => $paragraphs,
             'image' => $activity->image ? asset('storage/' . $activity->image) : null,
-            'imageAlt' => $activity->title,
+            'imageAlt' => $title,
         ],
     ]);
 })->name('activities.show');
 
-Route::view('/about', 'pages.about', [
-    'pageTitle' => 'About Us',
-    'metaDescription' => 'Who we are, what we work toward, and the principles that guide us.',
-    'aboutBlocks' => config('mawie.about_blocks'),
-])->name('about');
+Route::get('/about', function () {
+    return view('pages.about', [
+        'pageTitle' => __('About Us'),
+        'metaDescription' => __('Who we are, what we work toward, and the principles that guide us.'),
+        'aboutBlocks' => config('mawie.about_blocks'),
+    ]);
+})->name('about');
+
+Route::get('/support-us', function () {
+    return view('pages.support', [
+        'pageTitle' => __('Support Us'),
+        'metaDescription' => __('Support the Movement of Afghan Women in Exile with a donation, your time, or your voice.'),
+        'donationUrl' => config('mawie.support.donation_url'),
+        'bankDetails' => config('mawie.support.bank_details', []),
+    ]);
+})->name('support');
 
 Route::get('/media', function () {
+    $galeries = Galery::query()
+        ->orderByDesc('created_at')
+        ->orderByDesc('id')
+        ->paginate(12, ['*'], 'gallery_page')
+        ->withQueryString();
+    $videos = Video::query()
+        ->orderByDesc('created_at')
+        ->orderByDesc('id')
+        ->paginate(12, ['*'], 'video_page')
+        ->withQueryString();
+
     return view('pages.media', [
-        'pageTitle' => 'Media',
-        'metaDescription' => 'Photographs from events, commemorations, and meetings, along with short videos and statements as they become available.',
-        'galeries' => Galery::query()
-            ->orderByDesc('created_at')
-            ->orderByDesc('id')
-            ->paginate(12, ['*'], 'gallery_page')
-            ->withQueryString(),
-        'videos' => Video::query()
-            ->orderByDesc('created_at')
-            ->orderByDesc('id')
-            ->paginate(12, ['*'], 'video_page')
-            ->withQueryString(),
+        'pageTitle' => __('Media'),
+        'metaDescription' => __('Photographs from events, commemorations, and meetings, along with short videos and statements as they become available.'),
+        'galeries' => $galeries,
+        'videos' => $videos,
     ]);
 })->name('media');
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.send');
 
-Route::get('/verify-member', [VerificationController::class, 'index'])->name('verify-member');
+Route::middleware('throttle:20,1')->group(function () {
+    Route::get('/verify-member', [VerificationController::class, 'index'])->name('verify-member');
+    Route::get('/verify/{token}', [VerificationController::class, 'card'])
+        ->where('token', '[A-Za-z0-9]{32}')
+        ->name('verify-card');
+});
 
 Route::get('/login', [AuthController::class, 'create'])->name('login');
 Route::post('/login', [AuthController::class, 'store'])->name('login.store');
@@ -173,5 +196,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('verifications/{verification}/card/{side}.png', [MemberCardController::class, 'image'])
         ->whereIn('side', ['front', 'back'])
         ->name('verifications.card.image');
+    Route::post('verifications/{verification}/card/replace', [MemberCardController::class, 'replace'])->name('verifications.card.replace');
+    Route::post('verifications/{verification}/revoke', [AdminVerificationController::class, 'revoke'])->name('verifications.revoke');
+    Route::post('verifications/{verification}/restore', [AdminVerificationController::class, 'restore'])->name('verifications.restore');
     Route::resource('videos', VideoController::class)->except(['show']);
 });

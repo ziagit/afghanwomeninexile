@@ -10,7 +10,7 @@
                 @if(!empty($activity['image']))
                     <img class="activity-detail__image" src="{{ $activity['image'] }}" alt="{{ $activity['imageAlt'] ?? $activity['title'] }}" loading="lazy">
                 @else
-                    <x-media-placeholder class="activity-detail__placeholder" label="Photo coming soon" />
+                    <x-media-placeholder class="activity-detail__placeholder" :label="__('Photo coming soon')" />
                 @endif
             </div>
             <div class="archive-text">
@@ -21,7 +21,7 @@
                     <p>{{ $paragraph }}</p>
                 @endforeach
 
-                <a class="archive-readmore" href="{{ route('activities') }}">Back to archive</a>
+                <a class="archive-readmore" href="{{ route('activities') }}">{{ __('Back to archive') }}</a>
             </div>
         </div>
     </div>

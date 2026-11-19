@@ -33,9 +33,9 @@ class VerificationController extends Controller
         $data = $this->validateRequest($request);
         $data['picture'] = $this->storePicture($request);
 
-        Verification::create($data);
+        $verification = Verification::create($data);
 
-        return redirect()->route('admin.verifications.index')->with('status', 'Member created successfully.');
+        return redirect()->route('admin.verifications.card', $verification)->with('status', 'Member created successfully. Their card is ready to download.');
     }
 
     public function edit(Verification $verification): View

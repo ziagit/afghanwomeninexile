@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GaleryController;
+use App\Http\Controllers\Admin\MemberCardController;
 use App\Http\Controllers\Admin\VerificationController as AdminVerificationController;
 use App\Http\Controllers\Admin\VideoController;
 use App\Http\Controllers\ContactController;
@@ -168,5 +169,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('activities', ActivityController::class)->except(['show']);
     Route::resource('galeries', GaleryController::class)->except(['show']);
     Route::resource('verifications', AdminVerificationController::class)->except(['show']);
+    Route::get('verifications/{verification}/card', [MemberCardController::class, 'show'])->name('verifications.card');
+    Route::get('verifications/{verification}/card.pdf', [MemberCardController::class, 'pdf'])->name('verifications.card.pdf');
     Route::resource('videos', VideoController::class)->except(['show']);
 });

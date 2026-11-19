@@ -28,6 +28,7 @@
                         <td>{{ $verification->joined_at?->format('Y-m-d') }}</td>
                         <td>{{ $verification->expirs_at?->format('Y-m-d') ?? '-' }}</td>
                         <td class="actions-cell">
+                            <a href="{{ route('admin.verifications.card', $verification) }}">Card</a>
                             <a href="{{ route('admin.verifications.edit', $verification) }}">Edit</a>
                             <form action="{{ route('admin.verifications.destroy', $verification) }}" method="post" onsubmit="return confirm('Delete this member?');">
                                 @csrf

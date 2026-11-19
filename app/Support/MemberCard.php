@@ -8,6 +8,7 @@ use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
 use GdImage;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Draws a member's ID card as print-ready PNGs: CR80 portrait (54 x 85.6 mm) at 600 DPI,
@@ -46,6 +47,18 @@ class MemberCard
         private Verification $verification,
         private string $verifyUrl,
     ) {}
+
+    // e.g. "shaima-rezaei-mawe-00131-2026-front.png" (non-Latin names are transliterated by Str::slug).
+    public static function filename(Verification $verification, string $side): string
+    {
+        $parts = array_filter([
+            Str::slug($verification->first_name.' '.$verification->last_name),
+            Str::slug($verification->member_id),
+            $side,
+        ]);
+
+        return implode('-', $parts).'.png';
+    }
 
     public function front(): string
     {

@@ -4,7 +4,10 @@
 @php
     $sides = ['front' => 'Front', 'back' => 'Back'];
     $downloads = collect(array_keys($sides))
-        ->map(fn ($side) => route('admin.verifications.card.image', [$verification, $side, 'download' => 1]))
+        ->map(fn ($side) => [
+            'url' => route('admin.verifications.card.image', [$verification, $side, 'download' => 1]),
+            'name' => \App\Support\MemberCard::filename($verification, $side),
+        ])
         ->all();
 @endphp
 <section class="admin-card member-card-page">
@@ -33,11 +36,11 @@
 
 <script>
     document.getElementById('member-card-download').addEventListener('click', function () {
-        JSON.parse(this.dataset.files).forEach(function (url, index) {
+        JSON.parse(this.dataset.files).forEach(function (file, index) {
             setTimeout(function () {
                 var link = document.createElement('a');
-                link.href = url;
-                link.download = '';
+                link.href = file.url;
+                link.download = file.name;
                 document.body.appendChild(link);
                 link.click();
                 link.remove();

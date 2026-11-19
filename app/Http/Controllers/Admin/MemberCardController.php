@@ -7,7 +7,6 @@ use App\Models\Verification;
 use App\Support\MemberCard;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class MemberCardController extends Controller
@@ -24,7 +23,7 @@ class MemberCardController extends Controller
     {
         $card = new MemberCard($verification, route('verify-member', ['member_id' => $verification->member_id]));
         $png = $side === 'front' ? $card->front() : $card->back();
-        $filename = 'member-card-'.Str::slug($verification->member_id).'-'.$side.'.png';
+        $filename = MemberCard::filename($verification, $side);
 
         return response($png, 200, [
             'Content-Type' => 'image/png',

@@ -63,8 +63,15 @@
         @if ($isEdit && $verification->picture)
             <div class="preview-row">
                 <span>Current picture:</span>
-                <a href="{{ asset('storage/'.$verification->picture) }}" target="_blank" rel="noreferrer">View file</a>
+                <button type="button" class="picture-thumb" onclick="document.getElementById('member-picture-dialog').showModal()" aria-label="View current picture">
+                    <img src="{{ asset('storage/'.$verification->picture) }}" alt="{{ $verification->first_name }} {{ $verification->last_name }}">
+                </button>
             </div>
+
+            <dialog id="member-picture-dialog" class="picture-dialog" onclick="if (event.target === this) this.close()">
+                <button type="button" class="picture-dialog__close" onclick="this.closest('dialog').close()" aria-label="Close">&times;</button>
+                <img src="{{ asset('storage/'.$verification->picture) }}" alt="{{ $verification->first_name }} {{ $verification->last_name }}">
+            </dialog>
         @endif
         @error('picture')<span class="field-error">{{ $message }}</span>@enderror
     </div>

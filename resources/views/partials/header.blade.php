@@ -18,7 +18,7 @@
             <a class="toplink {{ request()->routeIs('media') ? 'active' : '' }}" href="{{ route('media') }}">{{ __('Media') }}</a>
             <a class="toplink {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">{{ __('About') }}</a>
             <a class="toplink {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">{{ __('Contact') }}</a>
-            <a class="toplink header-donate {{ request()->routeIs('support') ? 'active' : '' }}" href="{{ route('support') }}">{{ __('Donate Now') }}</a>
+            <a class="toplink header-donate {{ request()->routeIs('support') ? 'active' : '' }}" href="{{ route('support') }}">{{ __('Support Us') }}</a>
         </nav>
     </div>
 </header>

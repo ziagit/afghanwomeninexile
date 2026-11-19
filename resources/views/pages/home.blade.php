@@ -137,7 +137,7 @@
         <h2>{{ __('Stand with Afghan women in exile.') }}</h2>
         <p>{{ __('Since losing their rights to education, work, and safety, Afghan women in exile are rebuilding their futures — one step at a time. Your donation helps provide shelter, legal support, and education so they can keep moving forward.') }}</p>
         <p><strong>{{ __('Your donation is a lifeline.') }}</strong></p>
-        <a class="btn btn-gold" href="{{ route('support') }}">{{ __('Donate Now') }}</a>
+        <a class="btn btn-gold" href="{{ route('support') }}">{{ __('Support Us') }}</a>
     </div>
 </section>
 @endsection

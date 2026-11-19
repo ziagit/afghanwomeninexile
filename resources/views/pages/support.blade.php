@@ -30,7 +30,7 @@
                 <div class="support-card">
                     <h3>{{ __('Donate online') }}</h3>
                     <p>{{ __('Make a secure donation by card or online payment.') }}</p>
-                    <a class="btn btn-brick" href="{{ $donationUrl }}" target="_blank" rel="noopener noreferrer">{{ __('Donate Now') }}</a>
+                    <a class="btn btn-brick" href="{{ $donationUrl }}" target="_blank" rel="noopener noreferrer">{{ __('Support Us') }}</a>
                 </div>
             @endif
 

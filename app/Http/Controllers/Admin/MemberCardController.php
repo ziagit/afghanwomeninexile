@@ -15,10 +15,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MemberCardController extends Controller
 {
-    // CR80 ID card in portrait orientation, in points (1mm = 72 / 25.4pt).
-    private const CARD_WIDTH_PT = 153.07;
+    // CR80 ID card (ISO/IEC 7810 ID-1) in portrait orientation, in millimetres.
+    private const CARD_WIDTH_MM = 54;
 
-    private const CARD_HEIGHT_PT = 242.65;
+    private const CARD_HEIGHT_MM = 85.6;
+
+    // Print-shop version: background bleed past the trim line, plus a margin for crop marks.
+    private const PRESS_BLEED_MM = 3;
+
+    private const PRESS_SLUG_MM = 6;
 
     public function show(Verification $verification): View
     {
@@ -32,6 +37,12 @@ class MemberCardController extends Controller
     {
         $verifyUrl = $this->verifyUrl($verification);
 
+        $press = request()->query('version') === 'press';
+        $bleed = $press ? self::PRESS_BLEED_MM : 0;
+        $slug = $press ? self::PRESS_SLUG_MM : 0;
+        $pageWidth = self::CARD_WIDTH_MM + 2 * ($bleed + $slug);
+        $pageHeight = self::CARD_HEIGHT_MM + 2 * ($bleed + $slug);
+
         $pdf = Pdf::loadView('admin.verifications.card-pdf', [
             'verification' => $verification,
             'verifyUrl' => $verifyUrl,
@@ -39,11 +50,21 @@ class MemberCardController extends Controller
             'photo' => $this->photo($verification->picture),
             'logo' => 'data:image/png;base64,'.base64_encode(file_get_contents(public_path('logo.png'))),
             'fontDir' => resource_path('fonts'),
-        ])->setPaper([0, 0, self::CARD_WIDTH_PT, self::CARD_HEIGHT_PT]);
+            'press' => $press,
+            'bleed' => $bleed,
+            'slug' => $slug,
+            'pageWidth' => $pageWidth,
+            'pageHeight' => $pageHeight,
+        ])->setPaper([0, 0, $this->points($pageWidth), $this->points($pageHeight)]);
 
-        $filename = 'member-card-'.Str::slug($verification->member_id).'.pdf';
+        $filename = 'member-card-'.Str::slug($verification->member_id).($press ? '-print-shop' : '').'.pdf';
 
         return request()->boolean('inline') ? $pdf->stream($filename) : $pdf->download($filename);
+    }
+
+    private function points(float $millimetres): float
+    {
+        return $millimetres * 72 / 25.4;
     }
 
     private function verifyUrl(Verification $verification): string

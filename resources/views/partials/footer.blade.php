@@ -55,7 +55,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <span>{{ __('© 2026 The Movement of Afghan Women in Exile. All rights reserved.') }}</span>
+            <span>{{ __('© 2026 The Movement of Afghan Women in Exile. All rights reserved.') }} <a href="{{ localized_route('privacy') }}">{{ __('Privacy Policy') }}</a></span>
             <span>{{ __('Standing for justice, equality, and human dignity.') }}</span>
         </div>
     </div>

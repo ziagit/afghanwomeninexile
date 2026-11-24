@@ -146,6 +146,13 @@ $publicRoutes = function () {
         ]);
     })->name('support');
 
+    Route::get('/privacy-policy', function () {
+        return view('pages.privacy', [
+            'pageTitle' => __('Privacy Policy'),
+            'metaDescription' => __('How the Movement of Afghan Women in Exile handles your information on this website, Facebook and Instagram.'),
+        ]);
+    })->name('privacy');
+
     Route::get('/media', function () {
         $news = News::query()
             ->orderByDesc('published_at')

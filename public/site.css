@@ -209,3 +209,4 @@ nav.primary{margin-inline-start:auto;}
 .media-more[hidden]{display:none;}
 .media-more .btn{display:inline-flex;align-items:center;gap:10px;}
 .media-more .btn svg{width:20px;height:20px;}
+.policy{max-width:760px;}.policy h2{font-size:1.4rem;margin:36px 0 12px;}.policy p,.policy li{line-height:1.7;color:var(--ink-soft);}.policy ul{padding-left:20px;display:flex;flex-direction:column;gap:10px;}[dir=rtl] .policy ul{padding-left:0;padding-right:20px;}.policy a{color:var(--brick);text-decoration:underline;}.footer-bottom a{color:inherit;text-decoration:underline;margin-inline-start:8px;}

@@ -42,6 +42,22 @@ class YouTubeGalleryTest extends TestCase
         Http::assertSentCount(1);
     }
 
+    public function test_gallery_reads_videos_back_from_a_persistent_cache(): void
+    {
+        // The live site caches in the database, which only restores plain values.
+        config(['cache.default' => 'database']);
+        Http::fake(['www.youtube.com/feeds/*' => Http::response(self::FEED)]);
+
+        $this->get(route('gallery'))->assertOk();
+
+        $this->get(route('fa.gallery'))
+            ->assertOk()
+            ->assertSee('August 15: A Defining Moment for Afghan Women')
+            ->assertSee('22 اگست 2026');
+
+        Http::assertSentCount(1);
+    }
+
     public function test_gallery_keeps_last_videos_when_youtube_is_down(): void
     {
         Http::fakeSequence('www.youtube.com/feeds/*')->push(self::FEED)->push('', 500);

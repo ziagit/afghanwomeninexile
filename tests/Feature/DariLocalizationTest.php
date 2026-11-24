@@ -82,6 +82,23 @@ class DariLocalizationTest extends TestCase
             ->assertSee('href="'.route('activities.show', $activity).'"', false);
     }
 
+    public function test_dari_content_seeder_fills_only_matching_untranslated_rows(): void
+    {
+        $data = json_decode(file_get_contents(database_path('seeders/data/dari_content.json')), true);
+        [$first, $second, $third] = $data['activities'];
+
+        Activity::forceCreate(['id' => $first['id'], 'name' => 'A', 'title' => $first['title'], 'body' => 'B']);
+        Activity::forceCreate(['id' => $second['id'], 'name' => 'A', 'title' => 'An edited English title', 'body' => 'B']);
+        Activity::forceCreate(['id' => $third['id'], 'name' => 'A', 'title' => $third['title'], 'title_fa' => 'عنوان دستی', 'body' => 'B']);
+
+        $this->seed(\Database\Seeders\DariContentSeeder::class);
+
+        $this->assertSame($first['body_fa'], Activity::find($first['id'])->body_fa);
+        $this->assertNull(Activity::find($second['id'])->title_fa);
+        $this->assertSame('عنوان دستی', Activity::find($third['id'])->title_fa);
+        $this->assertSame($third['body_fa'], Activity::find($third['id'])->body_fa);
+    }
+
     public function test_contact_errors_are_in_dari_on_dari_site(): void
     {
         $this->from(route('fa.contact'))

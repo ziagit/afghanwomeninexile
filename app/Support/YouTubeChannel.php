@@ -9,11 +9,20 @@ use Illuminate\Support\Facades\Http;
 // Latest uploads of the movement's YouTube channel, read from its public feed (no API key needed).
 class YouTubeChannel
 {
-    private const CACHE_KEY = 'youtube.videos';
+    // Cached as plain strings: the cache won't restore objects such as dates (cache.serializable_classes).
+    private const CACHE_KEY = 'youtube.videos.v2';
 
     // The feed lists the 15 most recent uploads.
     /** @return array<int, array{id: string, title: string, url: string, thumbnail: string, published_at: Carbon}> */
     public static function latestVideos(): array
+    {
+        return array_map(
+            fn (array $video) => ['published_at' => Carbon::parse($video['published_at'])] + $video,
+            self::cachedVideos(),
+        );
+    }
+
+    private static function cachedVideos(): array
     {
         $videos = Cache::get(self::CACHE_KEY);
 
@@ -62,7 +71,7 @@ class YouTubeChannel
                 'title' => trim((string) $entry->title),
                 'url' => 'https://www.youtube.com/watch?v='.$id,
                 'thumbnail' => 'https://i.ytimg.com/vi/'.$id.'/hqdefault.jpg',
-                'published_at' => Carbon::parse((string) $entry->published),
+                'published_at' => (string) $entry->published,
             ];
         }
 

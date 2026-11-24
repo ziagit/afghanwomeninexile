@@ -5,29 +5,36 @@
 
 <section>
     <div class="wrap">
-        <div class="archive-list">
-            @forelse($news as $newsItem)
-                @php
-                    $paragraphs = $newsItem->paragraphs();
-                @endphp
-                <div class="archive-entry">
-                    <div class="archive-left">
-                        @if($newsItem->image)
-                            <img class="archive-media archive-media--image" src="{{ asset('storage/'.$newsItem->image) }}" alt="{{ $newsItem->translated('title') }}" loading="lazy">
-                        @else
-                            <x-media-placeholder class="archive-media" :label="__('Photo coming soon')" />
-                        @endif
-                    </div>
-                    <div class="archive-text">
-                        <div class="archive-tag">{{ __('News') }}<span class="sub">{{ $newsItem->published_at->translatedFormat('j F Y') }}</span></div>
-                        <h3 class="archive-title" dir="auto">{{ $newsItem->translated('title') }}</h3>
-                        <p class="archive-excerpt" dir="auto">{{ \Illuminate\Support\Str::limit(implode(' ', array_slice($paragraphs, 0, 2)), 240) }} <a class="archive-readmore-inline" href="{{ localized_route('media.show', $newsItem) }}">{{ __('Read more') }}</a></p>
-                    </div>
-                </div>
-            @empty
-                <p class="media-empty">{{ __('No news has been published yet.') }}</p>
-            @endforelse
-        </div>
+        @if ($news->isEmpty())
+            <p class="media-empty">{{ __('No news has been published yet.') }}</p>
+        @else
+            <div class="news-grid">
+                @foreach($news as $newsItem)
+                    @php
+                        $isLead = $loop->first && $news->onFirstPage();
+                        $title = $newsItem->translated('title');
+                    @endphp
+                    <a class="news-card{{ $isLead ? ' news-card--lead' : '' }}" href="{{ localized_route('media.show', $newsItem) }}">
+                        <div class="news-card__media">
+                            @if($newsItem->image)
+                                <img src="{{ asset('storage/'.$newsItem->image) }}" alt="{{ $title }}" loading="{{ $isLead ? 'eager' : 'lazy' }}">
+                            @else
+                                <x-media-placeholder :label="__('Photo coming soon')" />
+                            @endif
+                        </div>
+                        <div class="news-card__body">
+                            <div class="news-card__meta">
+                                @if($isLead)<span class="news-card__flag">{{ __('Latest') }}</span>@endif
+                                <time datetime="{{ $newsItem->published_at->toDateString() }}">{{ $newsItem->published_at->translatedFormat('j F Y') }}</time>
+                            </div>
+                            <h3 class="news-card__title" dir="auto">{{ $title }}</h3>
+                            <p class="news-card__excerpt" dir="auto">{{ \Illuminate\Support\Str::limit(implode(' ', array_slice($newsItem->paragraphs(), 0, 2)), $isLead ? 360 : 180) }}</p>
+                            <span class="news-card__more">{{ __('Read more') }}</span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        @endif
 
         @if ($news->hasPages())
             <div class="archive-pagination">

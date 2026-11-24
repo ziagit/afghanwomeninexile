@@ -58,6 +58,8 @@
         @error('image')<span class="field-error">{{ $message }}</span>@enderror
     </div>
 
+    @include('admin.partials.share-facebook', ['item' => $newsItem])
+
     <div class="form-actions">
         <a href="{{ route('admin.news.index') }}" class="btn btn-outline">Cancel</a>
         <button type="submit" class="btn btn-brick">{{ $isEdit ? 'Update News' : 'Create News' }}</button>

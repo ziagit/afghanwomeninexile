@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ShareToFacebook;
 use App\Models\Activity;
+use App\Services\FacebookPage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -51,9 +53,9 @@ class ActivityController extends Controller
         $data['type'] = $data['type'] ?: 'general';
         $data['image'] = $this->storeImage($request);
 
-        Activity::create($data);
+        $activity = Activity::create($data);
 
-        return redirect()->route('admin.activities.index')->with('status', 'Activity created successfully.');
+        return redirect()->route('admin.activities.index')->with('status', 'Activity created successfully.' . $this->shareToFacebook($request, $activity));
     }
 
     public function edit(Activity $activity): View
@@ -78,7 +80,7 @@ class ActivityController extends Controller
 
         $activity->update($data);
 
-        return redirect()->route('admin.activities.index')->with('status', 'Activity updated successfully.');
+        return redirect()->route('admin.activities.index')->with('status', 'Activity updated successfully.' . $this->shareToFacebook($request, $activity));
     }
 
     public function destroy(Activity $activity): RedirectResponse
@@ -103,6 +105,22 @@ class ActivityController extends Controller
         ], [
             'image.max' => 'This file size is too large. Please optimize and upload.',
         ]);
+    }
+
+    // Queues the Facebook post when "Share to Facebook" was ticked; returns a note for the status message.
+    private function shareToFacebook(Request $request, Activity $activity): string
+    {
+        if (! $request->boolean('share_facebook') || $activity->facebook_post_id) {
+            return '';
+        }
+
+        if (! FacebookPage::isConfigured()) {
+            return ' Facebook is not configured, so it was not shared.';
+        }
+
+        ShareToFacebook::dispatch($activity);
+
+        return ' It will be shared to Facebook shortly.';
     }
 
     private function storeImage(Request $request): ?string

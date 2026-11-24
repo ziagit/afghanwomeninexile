@@ -24,6 +24,7 @@
                     <th>Title</th>
                     <th>Dari</th>
                     <th>Image</th>
+                    <th>Facebook</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -40,6 +41,7 @@
                                 -
                             @endif
                         </td>
+                        <td>@include('admin.partials.facebook-status', ['item' => $newsItem])</td>
                         <td class="actions-cell">
                             <a href="{{ route('admin.news.edit', $newsItem) }}">Edit</a>
                             <form action="{{ route('admin.news.destroy', $newsItem) }}" method="post" onsubmit="return confirm('Delete this news?');">
@@ -51,7 +53,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5">No news found.</td>
+                        <td colspan="6">No news found.</td>
                     </tr>
                 @endforelse
             </tbody>

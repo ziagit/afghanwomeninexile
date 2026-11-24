@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ShareToFacebook;
 use App\Models\News;
+use App\Services\FacebookPage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -48,9 +50,9 @@ class NewsController extends Controller
         $data = $this->validateRequest($request);
         $data['image'] = $this->storeImage($request);
 
-        News::create($data);
+        $news = News::create($data);
 
-        return redirect()->route('admin.news.index')->with('status', 'News created successfully.');
+        return redirect()->route('admin.news.index')->with('status', 'News created successfully.' . $this->shareToFacebook($request, $news));
     }
 
     public function edit(News $news): View
@@ -74,7 +76,7 @@ class NewsController extends Controller
 
         $news->update($data);
 
-        return redirect()->route('admin.news.index')->with('status', 'News updated successfully.');
+        return redirect()->route('admin.news.index')->with('status', 'News updated successfully.' . $this->shareToFacebook($request, $news));
     }
 
     public function destroy(News $news): RedirectResponse
@@ -97,6 +99,22 @@ class NewsController extends Controller
         ], [
             'image.max' => 'This file size is too large. Please optimize and upload.',
         ]);
+    }
+
+    // Queues the Facebook post when "Share to Facebook" was ticked; returns a note for the status message.
+    private function shareToFacebook(Request $request, News $news): string
+    {
+        if (! $request->boolean('share_facebook') || $news->facebook_post_id) {
+            return '';
+        }
+
+        if (! FacebookPage::isConfigured()) {
+            return ' Facebook is not configured, so it was not shared.';
+        }
+
+        ShareToFacebook::dispatch($news);
+
+        return ' It will be shared to Facebook shortly.';
     }
 
     private function storeImage(Request $request): ?string

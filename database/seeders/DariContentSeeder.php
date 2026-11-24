@@ -16,8 +16,29 @@ class DariContentSeeder extends Seeder
         $content = json_decode(file_get_contents(__DIR__.'/data/dari_content.json'), true);
 
         $this->fill(Activity::class, $content['activities'], 'title', ['name_fa', 'title_fa', 'body_fa']);
-        $this->fill(Galery::class, $content['galeries'], 'name', ['name_fa', 'details_fa']);
+        $this->fillGaleriesByName($content['galery_names']);
         $this->fill(Video::class, $content['videos'], 'name', ['name_fa', 'details_fa']);
+    }
+
+    // Gallery items are short labels that repeat ("Women's day"), so they are matched by name, not ID.
+    private function fillGaleriesByName(array $names): void
+    {
+        $updated = 0;
+
+        foreach (Galery::query()->whereNull('name_fa')->orWhere('name_fa', '')->get() as $galery) {
+            $dari = $names[mb_strtolower(trim($galery->name))] ?? null;
+
+            if ($dari === null) {
+                $this->command?->warn("Galery #{$galery->id} skipped: no Dari for \"{$galery->name}\".");
+
+                continue;
+            }
+
+            $galery->update(['name_fa' => $dari, 'details_fa' => $galery->details_fa ?: $dari]);
+            $updated++;
+        }
+
+        $this->command?->info("Galery: {$updated} filled in Dari.");
     }
 
     // Only rows whose English still matches get the translation, and Dari an admin already entered is kept.

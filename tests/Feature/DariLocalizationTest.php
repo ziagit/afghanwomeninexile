@@ -99,6 +99,21 @@ class DariLocalizationTest extends TestCase
         $this->assertSame($third['body_fa'], Activity::find($third['id'])->body_fa);
     }
 
+    public function test_dari_content_seeder_names_gallery_items_by_their_english_name(): void
+    {
+        $womensDay = Galery::create(['name' => "Women's day", 'details' => "Women's day"]);
+        $hazaraDay = Galery::create(['name' => "Hazara Culture's day", 'details' => 'Photos']);
+        $named = Galery::create(['name' => "Women's day", 'name_fa' => 'نام دستی', 'details' => 'Photos']);
+        $unknown = Galery::create(['name' => 'Kabul', 'details' => 'Photos']);
+
+        $this->seed(\Database\Seeders\DariContentSeeder::class);
+
+        $this->assertSame('روز جهانی زن', $womensDay->fresh()->name_fa);
+        $this->assertSame('روز فرهنگ هزاره', $hazaraDay->fresh()->name_fa);
+        $this->assertSame('نام دستی', $named->fresh()->name_fa);
+        $this->assertNull($unknown->fresh()->name_fa);
+    }
+
     public function test_contact_errors_are_in_dari_on_dari_site(): void
     {
         $this->from(route('fa.contact'))

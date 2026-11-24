@@ -73,7 +73,9 @@ class GaleryController extends Controller
     {
         return $request->validate([
             'name' => ['required', 'string', 'max:25'],
+            'name_fa' => ['nullable', 'string', 'max:25'],
             'details' => ['required', 'string'],
+            'details_fa' => ['nullable', 'string'],
             'picture' => ['nullable', 'image', 'max:1024'],
         ], [
             'picture.max' => 'This file size is too large. Please optimize and upload.',

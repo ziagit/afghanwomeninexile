@@ -8,8 +8,8 @@
         <div class="rule"></div>
         <p class="sub">{{ __('We advance human rights, promote gender equality, and empower Afghan women in exile through peaceful advocacy, education, and international cooperation.') }}</p>
         <div class="cta-row">
-            <a class="btn btn-gold" href="{{ route('activities') }}">{{ __('Read Our Statements') }}</a>
-            <a class="btn btn-outline" href="{{ route('contact') }}">{{ __('Get Involved') }}</a>
+            <a class="btn btn-gold" href="{{ localized_route('activities') }}">{{ __('Read Our Statements') }}</a>
+            <a class="btn btn-outline" href="{{ localized_route('contact') }}">{{ __('Get Involved') }}</a>
         </div>
     </div>
     <div class="wrap">
@@ -32,12 +32,12 @@
             @endphp
             <div class="stamp">
                 <span class="day">{{ $featuredObservance['stampDay'] ?? __('Latest') }}</span>
-                <span class="rest">{{ $featuredObservance['stampRest'] ?? __('Activity') }}</span>
+                <span class="rest" dir="auto">{{ $featuredObservance['stampRest'] ?? __('Activity') }}</span>
             </div>
             <div>
-                <h3>{{ $featuredObservance['eventName'] ?? __('No recent activity available') }}</h3>
-                <p class="featured-observance-body" style="display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden;line-height:1.55;max-height:12.4em;">{{ $observanceBody }}</p>
-                <a class="more" href="{{ $featuredObservance['link'] ?? route('activities') }}">{{ __('Read the full commemoration →') }}</a>
+                <h3 dir="auto">{{ $featuredObservance['eventName'] ?? __('No recent activity available') }}</h3>
+                <p class="featured-observance-body" dir="auto" style="display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden;line-height:1.55;max-height:12.4em;">{{ $observanceBody }}</p>
+                <a class="more" href="{{ $featuredObservance['link'] ?? localized_route('activities') }}">{{ __('Read the full commemoration →') }}</a>
             </div>
             <div class="ph dispatch-media">
                 @if(!empty($featuredObservance['image']))
@@ -56,7 +56,7 @@
         <div>
             <span class="eyebrow">{{ __('Our Mission') }}</span>
             <h2>{{ __('A future of dignity, security, and equal opportunity.') }}</h2>
-            <a class="more" style="color:var(--brick); font-weight:600; font-size:.9rem" href="{{ route('about') }}">{{ __('More about us →') }}</a>
+            <a class="more" style="color:var(--brick); font-weight:600; font-size:.9rem" href="{{ localized_route('about') }}">{{ __('More about us →') }}</a>
         </div>
         <div>
             <p>{{ __('The Movement of Afghan women in Exile was established in April 2025 by a coalition of human rights and women\'s rights advocates, united by a shared commitment to addressing the challenges faced by Afghan women under Taliban rule. With a focus on advocating for the legal and rightful protections of women, the movement raises awareness of their struggles, amplifies their voices, and fosters international support for their empowerment - through diplomatic engagement, collaboration, and education.') }}</p>
@@ -71,11 +71,11 @@
     <div class="wrap">
         <div class="posts-head">
             <h2 style="font-size:1.8rem">{{ __('Featured Posts') }}</h2>
-            <a style="font-size:.86rem; font-weight:600; color:var(--brick)" href="{{ route('activities') }}">{{ __('View full archive →') }}</a>
+            <a style="font-size:.86rem; font-weight:600; color:var(--brick)" href="{{ localized_route('activities') }}">{{ __('View full archive →') }}</a>
         </div>
         <div class="posts-grid">
             @foreach($featuredPosts as $post)
-                <a class="post-card" href="{{ $post['link'] ?? route('activities') }}">
+                <a class="post-card" href="{{ $post['link'] ?? localized_route('activities') }}">
                     <div class="ph{{ !empty($post['image']) ? ' post-card__media--image' : '' }}">
                         @if($post['kind'] === 'video')
                             <span class="ph-play">
@@ -92,8 +92,8 @@
                         @endif
                     </div>
                     <span class="eyebrow">{{ $post['tag'] }}</span>
-                    <h4>{{ $post['title'] }}</h4>
-                    <p class="featured-post-body">{{ $post['text'] }}</p>
+                    <h4 dir="auto">{{ $post['title'] }}</h4>
+                    <p class="featured-post-body" dir="auto">{{ $post['text'] }}</p>
                     <span class="more">{{ __('Read statement →') }}</span>
                 </a>
             @endforeach
@@ -106,13 +106,13 @@
     <div class="wrap">
         <div class="posts-head latest-event-head">
             <h2 style="font-size:1.8rem">{{ __('Latest event') }}</h2>
-            <a class="latest-event-all" href="{{ route('activities') }}">{{ __('View all events') }} <span aria-hidden="true">→</span></a>
+            <a class="latest-event-all" href="{{ localized_route('activities') }}">{{ __('View all events') }} <span aria-hidden="true">→</span></a>
         </div>
         <article class="latest-event-card">
             <div class="latest-event-media ph{{ $latestEvent['image'] ? ' latest-event-media--image' : '' }}" aria-label="{{ __('Photo placeholder') }}">
                 <div class="latest-event-date">
                     <strong>{{ $latestEvent['date']?->format('d') }}</strong>
-                    <span>{{ strtoupper($latestEvent['date']?->format('M')) }}</span>
+                    <span>{{ mb_strtoupper($latestEvent['date']?->translatedFormat('M')) }}</span>
                 </div>
                 @if ($latestEvent['image'])
                     <img src="{{ $latestEvent['image'] }}" alt="{{ $latestEvent['imageAlt'] }}" class="latest-event-image">
@@ -123,9 +123,9 @@
             </div>
             <div class="latest-event-details">
                 <span class="eyebrow">{{ __('Event') }}</span>
-                <h3>{{ $latestEvent['title'] }}</h3>
-                <p class="latest-event-description">{{ $latestEvent['text'] }}</p>
-                <a class="latest-event-recap" href="{{ route('activities.show', $latestEvent['id']) }}">{{ __('Read recap') }} <span aria-hidden="true">→</span></a>
+                <h3 dir="auto">{{ $latestEvent['title'] }}</h3>
+                <p class="latest-event-description" dir="auto">{{ $latestEvent['text'] }}</p>
+                <a class="latest-event-recap" href="{{ localized_route('activities.show', $latestEvent['id']) }}">{{ __('Read recap') }} <span aria-hidden="true">→</span></a>
             </div>
         </article>
     </div>
@@ -137,7 +137,7 @@
         <h2>{{ __('Stand with Afghan women in exile.') }}</h2>
         <p>{{ __('Since losing their rights to education, work, and safety, Afghan women in exile are rebuilding their futures — one step at a time. Your donation helps provide shelter, legal support, and education so they can keep moving forward.') }}</p>
         <p><strong>{{ __('Your donation is a lifeline.') }}</strong></p>
-        <a class="btn btn-gold" href="{{ route('support') }}">{{ __('Support Us') }}</a>
+        <a class="btn btn-gold" href="{{ localized_route('support') }}">{{ __('Support Us') }}</a>
     </div>
 </section>
 @endsection

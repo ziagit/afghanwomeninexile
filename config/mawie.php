@@ -112,6 +112,12 @@ return [
             'text' => "A joint statement marking International Women's Day and reaffirming the movement's commitment to Afghan women's rights.",
         ],
     ],
+    // The movement's YouTube channel; its latest videos are shown in the Gallery.
+    'youtube' => [
+        'channel_url' => 'https://www.youtube.com/@movementofAfgwomeninexile',
+        'channel_id' => 'UCxEQiqRrX7ruqKmY_pixvnQ',
+    ],
+
     // Support Us page. Each section only appears once it is filled in.
     'support' => [
         // Link to the online donation page (PayPal, GoFundMe, Stripe, ...).

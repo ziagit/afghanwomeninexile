@@ -2,30 +2,31 @@
     <div class="wrap">
         <div class="footer-grid">
             <div>
-                <div class="brand-line">AFGHANWOMENINEXILE</div>
+                <div class="brand-line">{{ __('AFGHANWOMENINEXILE') }}</div>
                 <p>{{ __('The Movement of Afghan women in Exile advances human rights, gender equality, and the dignity of Afghan women through peaceful advocacy, education, and international cooperation.') }}</p>
                 <div class="footer-actions">
-                    <a href="{{ route('verify-member') }}">{{ __('Verify') }}</a>
+                    <a href="{{ localized_route('verify-member') }}">{{ __('Verify') }}</a>
                     <a href="{{ route('login') }}">{{ __('Login') }}</a>
                 </div>
             </div>
             <div>
                 <h5>{{ __('Quick Links') }}</h5>
                 <ul>
-                    <li><a href="{{ route('home') }}">{{ __('Home') }}</a></li>
-                    <li><a href="{{ route('activities') }}">{{ __('Activities') }}</a></li>
-                    <li><a href="{{ route('about') }}">{{ __('About Us') }}</a></li>
-                    <li><a href="{{ route('media') }}">{{ __('Media') }}</a></li>
-                    <li><a href="{{ route('contact') }}">{{ __('Contact') }}</a></li>
-                    <li><a href="{{ route('support') }}">{{ __('Support Us') }}</a></li>
+                    <li><a href="{{ localized_route('home') }}">{{ __('Home') }}</a></li>
+                    <li><a href="{{ localized_route('activities') }}">{{ __('Activities') }}</a></li>
+                    <li><a href="{{ localized_route('about') }}">{{ __('About Us') }}</a></li>
+                    <li><a href="{{ localized_route('media') }}">{{ __('Media') }}</a></li>
+                    <li><a href="{{ localized_route('gallery') }}">{{ __('Gallery') }}</a></li>
+                    <li><a href="{{ localized_route('contact') }}">{{ __('Contact') }}</a></li>
+                    <li><a href="{{ localized_route('support') }}">{{ __('Support Us') }}</a></li>
                 </ul>
             </div>
             <div>
                 <h5>{{ __('Contact') }}</h5>
                 <ul>
                     <li><svg class="footer-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-4.2-6-10a6 6 0 1112 0c0 5.8-6 10-6 10z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="11" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg> {{ __('Islamabad, Pakistan') }}</li>
-                    <li><svg class="footer-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> info@afghanwomeninexile.org</li>
-                    <li><svg class="footer-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5l2.8 5.4-2 2c1.6 3 3.7 5.1 6.7 6.7l2-2 5.4 2.8c.2 1.9-1.4 3.6-3.3 3.6C11 23 1 13 1 4.7 1 2.8 2.6 1.2 4.5 1.4l3 3.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg> +92 336 5063509</li>
+                    <li><svg class="footer-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> <bdi dir="ltr">info@afghanwomeninexile.org</bdi></li>
+                    <li><svg class="footer-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5l2.8 5.4-2 2c1.6 3 3.7 5.1 6.7 6.7l2-2 5.4 2.8c.2 1.9-1.4 3.6-3.3 3.6C11 23 1 13 1 4.7 1 2.8 2.6 1.2 4.5 1.4l3 3.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg> <bdi dir="ltr">+92 336 5063509</bdi></li>
                 </ul>
             </div>
             <div>
@@ -37,7 +38,7 @@
                     <a href="https://x.com/rezaeifarzana" target="_blank" rel="noreferrer" aria-label="X / Twitter">
                         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 5h4.1l4 5.4L17 5h2.5l-5.4 7.1L20 19h-4.1l-4.4-5.9L7 19H4.5l5.9-7.7L4.5 5Z" fill="currentColor"/></svg>
                     </a>
-                    <a href="https://www.youtube.com/@TheMovementofAfgWomeninExile" target="_blank" rel="noreferrer" aria-label="YouTube">
+                    <a href="{{ config('mawie.youtube.channel_url') }}" target="_blank" rel="noreferrer" aria-label="YouTube">
                         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                             <rect x="3" y="6.5" width="18" height="11" rx="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
                             <path d="m10 9 5.5 3-5.5 3V9Z" fill="currentColor"/>

@@ -20,7 +20,7 @@
                 <h2>{{ __('Check membership') }}</h2>
                 <p>{{ __('Enter the member ID printed on the card. Scanning the card\'s QR code also shows the member\'s photo.') }}</p>
 
-                <form class="verify-form" method="get" action="{{ route('verify-member') }}">
+                <form class="verify-form" method="get" action="{{ localized_route('verify-member') }}">
                     <div class="field">
                         <label for="member_id">{{ __('Member ID') }}</label>
                         <input id="member_id" name="member_id" type="text" value="{{ $memberId }}" placeholder="{{ __('Enter member ID') }}" autocomplete="off" required>
@@ -50,7 +50,7 @@
                         @endif
                         <div class="verify-member-info">
                             <h2>{{ $verification->first_name }} {{ $verification->last_name }}</h2>
-                            <p class="verify-member-id">{{ $verification->member_id }}</p>
+                            <p class="verify-member-id"><bdi dir="ltr">{{ $verification->member_id }}</bdi></p>
                             <dl class="verify-details">
                                 <div><dt>{{ __('Status') }}</dt><dd>{{ $style['badge'] }}</dd></div>
                                 <div><dt>{{ __('Valid until') }}</dt><dd>{{ $verification->expirs_at?->translatedFormat('j F Y') ?? __('No expiry date') }}</dd></div>

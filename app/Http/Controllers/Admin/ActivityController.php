@@ -20,7 +20,10 @@ class ActivityController extends Controller
                     $query->where('name', 'like', '%' . $search . '%')
                         ->orWhere('type', 'like', '%' . $search . '%')
                         ->orWhere('title', 'like', '%' . $search . '%')
-                        ->orWhere('body', 'like', '%' . $search . '%');
+                        ->orWhere('body', 'like', '%' . $search . '%')
+                        ->orWhere('name_fa', 'like', '%' . $search . '%')
+                        ->orWhere('title_fa', 'like', '%' . $search . '%')
+                        ->orWhere('body_fa', 'like', '%' . $search . '%');
                 });
             })
             ->latest()
@@ -90,9 +93,12 @@ class ActivityController extends Controller
     {
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'name_fa' => ['nullable', 'string', 'max:255'],
             'type' => ['nullable', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
+            'title_fa' => ['nullable', 'string', 'max:255'],
             'body' => ['required', 'string'],
+            'body_fa' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'max:1024'],
         ], [
             'image.max' => 'This file size is too large. Please optimize and upload.',

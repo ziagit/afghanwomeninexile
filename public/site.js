@@ -19,6 +19,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const langMenu = document.querySelector('[data-lang-menu]');
+
+  if (langMenu) {
+    const button = langMenu.querySelector('[data-lang-menu-button]');
+    const list = langMenu.querySelector('[data-lang-menu-list]');
+    const items = Array.from(list.querySelectorAll('a'));
+
+    const setOpen = (open) => {
+      list.hidden = !open;
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+
+    button.addEventListener('click', () => {
+      setOpen(list.hidden);
+      if (!list.hidden) {
+        (items.find((item) => item.hasAttribute('aria-current')) || items[0])?.focus();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!langMenu.contains(event.target)) {
+        setOpen(false);
+      }
+    });
+
+    langMenu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !list.hidden) {
+        setOpen(false);
+        button.focus();
+      } else if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && !list.hidden) {
+        event.preventDefault();
+        const step = event.key === 'ArrowDown' ? 1 : -1;
+        const index = items.indexOf(document.activeElement);
+        items[(index + step + items.length) % items.length].focus();
+      }
+    });
+
+    langMenu.addEventListener('focusout', (event) => {
+      if (!langMenu.contains(event.relatedTarget)) {
+        setOpen(false);
+      }
+    });
+  }
+
   const root = document.querySelector('[data-media-root]');
   if (root) {
     const buttons = Array.from(root.querySelectorAll('[data-media-tab]'));

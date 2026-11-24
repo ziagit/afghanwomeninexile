@@ -14,14 +14,14 @@
                 @endif
             </div>
             <div class="archive-text">
-                <div class="archive-tag">{{ $activity['tag'] }}<span class="sub">{{ $activity['sub'] }}</span></div>
-                <h3>{{ $activity['title'] }}</h3>
+                <div class="archive-tag">{{ $activity['tag'] }}<span class="sub" dir="auto">{{ $activity['sub'] }}</span></div>
+                <h3 dir="auto">{{ $activity['title'] }}</h3>
 
                 @foreach($activity['paragraphs'] as $paragraph)
-                    <p>{{ $paragraph }}</p>
+                    <p dir="auto">{{ $paragraph }}</p>
                 @endforeach
 
-                <a class="archive-readmore" href="{{ route('activities') }}">{{ __('Back to archive') }}</a>
+                <a class="archive-readmore" href="{{ localized_route('activities') }}">{{ __('Back to archive') }}</a>
             </div>
         </div>
     </div>

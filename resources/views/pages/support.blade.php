@@ -49,7 +49,7 @@
                 <div class="support-card">
                     <h3>{{ __('How to donate') }}</h3>
                     <p>{{ __('Please contact us and we will send you the details for making a donation.') }}</p>
-                    <a class="btn btn-brick" href="{{ route('contact') }}">{{ __('Contact us') }}</a>
+                    <a class="btn btn-brick" href="{{ localized_route('contact') }}">{{ __('Contact us') }}</a>
                 </div>
             @endif
         </div>
@@ -68,7 +68,7 @@
                 <div class="support-impact__item">
                     <h3>{{ $item['title'] }}</h3>
                     <p>{{ $item['text'] }}</p>
-                    <a class="more" href="{{ route('contact') }}">{{ __('Get in touch →') }}</a>
+                    <a class="more" href="{{ localized_route('contact') }}">{{ __('Get in touch →') }}</a>
                 </div>
             @endforeach
         </div>

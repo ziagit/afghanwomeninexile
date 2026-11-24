@@ -14,26 +14,26 @@
             <div class="info-block">
                 <span class="eyebrow">{{ __('Email Us') }}</span>
                 <svg class="info-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <div class="val">info@afghanwomeninexile.org</div>
+                <div class="val"><bdi dir="ltr">info@afghanwomeninexile.org</bdi></div>
             </div>
             <div class="info-block">
                 <span class="eyebrow">{{ __('Call Us') }}</span>
                 <svg class="info-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 4.5l2.8 5.4-2 2c1.6 3 3.7 5.1 6.7 6.7l2-2 5.4 2.8c.2 1.9-1.4 3.6-3.3 3.6C11 23 1 13 1 4.7 1 2.8 2.6 1.2 4.5 1.4l3 3.1z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                <div class="val">+92 336 5063509</div>
+                <div class="val"><bdi dir="ltr">+92 336 5063509</bdi></div>
             </div>
             <div class="info-block">
                 <span class="eyebrow">{{ __('Follow Us') }}</span>
                 <div class="social-row">
                     <a href="https://www.facebook.com/profile.php?id=100063624367243" target="_blank" rel="noreferrer" aria-label="Facebook"><x-social-icon type="facebook" /></a>
                     <a href="https://x.com/rezaeifarzana" target="_blank" rel="noreferrer" aria-label="X / Twitter"><x-social-icon type="x" /></a>
-                    <a href="https://www.youtube.com/@TheMovementofAfgWomeninExile" target="_blank" rel="noreferrer" aria-label="YouTube"><x-social-icon type="youtube" /></a>
+                    <a href="{{ config('mawie.youtube.channel_url') }}" target="_blank" rel="noreferrer" aria-label="YouTube"><x-social-icon type="youtube" /></a>
                     <a href="https://www.instagram.com/movement_afg_women_in_exile_" target="_blank" rel="noreferrer" aria-label="Instagram"><x-social-icon type="instagram" /></a>
                 </div>
             </div>
         </div>
 
         <div>
-            <form class="contact-form" action="{{ route('contact.send') }}" method="post">
+            <form class="contact-form" action="{{ localized_route('contact.send') }}" method="post">
                 @csrf
                 <div class="field">
                     <label for="name">{{ __('Name') }}</label>

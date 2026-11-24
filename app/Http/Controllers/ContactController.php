@@ -33,13 +33,13 @@ class ContactController extends Controller
             report($exception);
 
             return redirect()
-                ->route('contact')
+                ->to(localized_route('contact'))
                 ->withInput()
                 ->with('error', __('We could not send your message right now. Please try again later.'));
         }
 
         return redirect()
-            ->route('contact')
+            ->to(localized_route('contact'))
             ->with('status', __('Thank you. Your message has been sent successfully.'));
     }
 }

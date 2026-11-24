@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasDariTranslation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Activity extends Model
 {
+    use HasDariTranslation;
+
     protected $fillable = [
         'name',
+        'name_fa',
         'type',
         'title',
+        'title_fa',
         'body',
+        'body_fa',
         'image',
     ];
 
@@ -25,7 +31,7 @@ class Activity extends Model
     /** @return array<int, string> */
     public function paragraphs(): array
     {
-        $paragraphs = preg_split("/\R{2,}/", trim((string) $this->body)) ?: [];
+        $paragraphs = preg_split("/\R{2,}/", trim((string) $this->translated('body'))) ?: [];
 
         return array_values(array_filter(array_map('trim', $paragraphs)));
     }

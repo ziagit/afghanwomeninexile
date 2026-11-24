@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<x-page-hero :eyebrow="__('Media')" :title="__('Gallery')" :description="__('Photographs from events, commemorations, and meetings will be published here as they become available.')" media="true" />
+<x-page-hero :eyebrow="__('Photos & Videos')" :title="__('Gallery')" :description="__('Photographs from events, commemorations, and meetings will be published here as they become available.')" media="true" />
 
 <section>
     <div class="wrap" data-media-root>
         <div class="media-sub-nav">
-            <button type="button" data-media-tab="videos" data-media-title="{{ __('Short Videos') }}" data-media-description="{{ __('Video statements, event footage, and interviews will be published here as they become available.') }}">{{ __('Short Videos') }}</button>
+            <button type="button" data-media-tab="videos" data-media-title="{{ __('Videos') }}" data-media-description="{{ __('Statements, speeches, and event videos from our YouTube channel.') }}">{{ __('Videos') }}</button>
             <button type="button" class="active" data-media-tab="gallery" data-media-title="{{ __('Gallery') }}" data-media-description="{{ __('Photographs from events, commemorations, and meetings will be published here as they become available.') }}">{{ __('Gallery') }}</button>
         </div>
 
@@ -16,54 +16,29 @@
                     class="video-card video-card--interactive"
                     tabindex="0"
                     role="button"
-                    aria-label="{{ __('Play :title', ['title' => $video->name]) }}"
+                    aria-label="{{ __('Play :title', ['title' => $video['title']]) }}"
                     data-video-item
-                    data-video-link="{{ $video->video_link }}"
+                    data-video-link="{{ $video['url'] }}"
                 >
                     <div class="video-card__media">
-                        @if($video->thumbnail)
-                            <img class="video-card__thumbnail" src="{{ asset('storage/' . $video->thumbnail) }}" alt="{{ $video->name }}" loading="lazy">
-                        @else
-                            <x-media-placeholder class="video-card__placeholder" kind="video" :label="__('Watch video')" />
-                        @endif
+                        <img class="video-card__thumbnail" src="{{ $video['thumbnail'] }}" alt="" loading="lazy">
                         <span class="video-card__play" aria-hidden="true">▶</span>
                     </div>
                     <div class="video-card__body">
-                        <strong>{{ $video->name }}</strong>
+                        <strong dir="auto">{{ $video['title'] }}</strong>
+                        <span class="video-card__date">{{ $video['published_at']->translatedFormat('j F Y') }}</span>
                     </div>
                 </article>
             @empty
-                <p class="media-empty">{{ __('No short videos are available yet.') }}</p>
+                <p class="media-empty">{{ __('Videos could not be loaded right now. Please watch them on our YouTube channel.') }}</p>
             @endforelse
         </div>
-        @if ($videos->hasPages())
-            @php($videos->appends(['media' => 'videos']))
-            <div class="archive-pagination media-pagination" data-media-panel="videos">
-                <div class="pagination-strip" aria-label="{{ __('Short videos pagination') }}">
-                    @if ($videos->onFirstPage())
-                        <span class="pagination-btn is-disabled" aria-disabled="true">{{ __('Prev') }}</span>
-                    @else
-                        <a class="pagination-btn" href="{{ $videos->previousPageUrl() }}">{{ __('Prev') }}</a>
-                    @endif
-
-                    @php($videoStartPage = max(1, min($videos->currentPage() - 1, $videos->lastPage() - 2)))
-                    @php($videoEndPage = min($videos->lastPage(), $videoStartPage + 2))
-                    @for ($page = $videoStartPage; $page <= $videoEndPage; $page++)
-                        @if ($page === $videos->currentPage())
-                            <span class="pagination-btn is-active" aria-current="page">{{ $page }}</span>
-                        @else
-                            <a class="pagination-btn" href="{{ $videos->url($page) }}">{{ $page }}</a>
-                        @endif
-                    @endfor
-
-                    @if ($videos->hasMorePages())
-                        <a class="pagination-btn" href="{{ $videos->nextPageUrl() }}">{{ __('Next') }}</a>
-                    @else
-                        <span class="pagination-btn is-disabled" aria-disabled="true">{{ __('Next') }}</span>
-                    @endif
-                </div>
-            </div>
-        @endif
+        <div class="media-more" data-media-panel="videos" hidden>
+            <a class="btn btn-brick" href="{{ $youtubeUrl }}" target="_blank" rel="noopener noreferrer">
+                <x-social-icon type="youtube" />
+                {{ __('More videos on YouTube') }}
+            </a>
+        </div>
 
         <div class="media-grid" data-media-panel="gallery">
             @forelse($galeries as $galery)
@@ -72,17 +47,17 @@
                     @if($galery->picture)
                         tabindex="0"
                         role="button"
-                        aria-label="{{ __('View :title', ['title' => $galery->name]) }}"
+                        aria-label="{{ __('View :title', ['title' => $galery->translated('name')]) }}"
                         data-gallery-item
                         data-gallery-image="{{ asset('storage/' . $galery->picture) }}"
-                        data-gallery-title="{{ $galery->name }}"
+                        data-gallery-title="{{ $galery->translated('name') }}"
                     @endif
                 >
                     @if($galery->picture)
                         <img
                             class="gallery-card__image"
                             src="{{ asset('storage/' . $galery->picture) }}"
-                            alt="{{ $galery->name }}"
+                            alt="{{ $galery->translated('name') }}"
                             loading="lazy"
                         >
                     @else
@@ -90,7 +65,7 @@
                     @endif
 
                     <div class="gallery-card__body">
-                        <h2>{{ $galery->name }}</h2>
+                        <h2 dir="auto">{{ $galery->translated('name') }}</h2>
                     </div>
                 </article>
             @empty

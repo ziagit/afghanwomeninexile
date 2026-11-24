@@ -15,19 +15,19 @@
                 return $entry;
             }
 
-            $paragraphs = preg_split("/\R{2,}/", trim((string) $entry->body)) ?: [];
+            $paragraphs = preg_split("/\R{2,}/", trim((string) $entry->translated('body'))) ?: [];
             $paragraphs = array_values(array_filter(array_map('trim', $paragraphs)));
             $excerptSource = implode(' ', array_slice($paragraphs, 0, 2));
 
             return [
                 'id' => $entry->id,
-                'tag' => \Illuminate\Support\Str::headline((string) $entry->type),
-                'sub' => $entry->name ?: __('Advocacy'),
-                'title' => $entry->title,
+                'tag' => $entry->typeLabel(),
+                'sub' => $entry->translated('name') ?: __('Advocacy'),
+                'title' => $entry->translated('title'),
                 'paragraphs' => $paragraphs,
                 'excerpt' => \Illuminate\Support\Str::limit($excerptSource, 240),
                 'image' => $entry->image ? asset('storage/' . $entry->image) : null,
-                'imageAlt' => $entry->title,
+                'imageAlt' => $entry->translated('title'),
             ];
         })
     );
@@ -48,9 +48,9 @@
                         @endif
                     </div>
                     <div class="archive-text">
-                        <div class="archive-tag">{{ $entry['tag'] }}<span class="sub">{{ $entry['sub'] }}</span></div>
-                        <h3 class="archive-title">{{ $entry['title'] }}</h3>
-                        <p class="archive-excerpt">{{ $entry['excerpt'] }} <a class="archive-readmore-inline" href="{{ route('activities.show', $entry['id']) }}">{{ __('Read more') }}</a></p>
+                        <div class="archive-tag">{{ $entry['tag'] }}<span class="sub" dir="auto">{{ $entry['sub'] }}</span></div>
+                        <h3 class="archive-title" dir="auto">{{ $entry['title'] }}</h3>
+                        <p class="archive-excerpt" dir="auto">{{ $entry['excerpt'] }} <a class="archive-readmore-inline" href="{{ localized_route('activities.show', $entry['id']) }}">{{ __('Read more') }}</a></p>
                     </div>
                 </div>
             @endforeach

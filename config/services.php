@@ -28,6 +28,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'meta' => [
+        'graph_version' => env('META_GRAPH_VERSION', 'v27.0'),
+        'app_id' => env('META_APP_ID'),
+        'app_secret' => env('META_APP_SECRET'),
+        'page_id' => env('META_PAGE_ID'),
+        'page_access_token' => env('META_PAGE_ACCESS_TOKEN'),
+        'instagram_user_id' => env('META_INSTAGRAM_USER_ID'),
+        'webhook_verify_token' => env('META_WEBHOOK_VERIFY_TOKEN'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

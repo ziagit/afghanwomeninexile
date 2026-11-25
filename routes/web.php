@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\MemberCardController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\VerificationController as AdminVerificationController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\MessengerWebhookController;
 use App\Http\Controllers\VerificationController;
 use App\Support\YouTubeChannel;
 use Illuminate\Support\Facades\Route;
@@ -204,6 +205,10 @@ $publicRoutes = function () {
 
 Route::middleware('locale:en')->group($publicRoutes);
 Route::prefix('fa')->name('fa.')->middleware('locale:fa')->group($publicRoutes);
+
+// Facebook Messenger: Meta verifies the URL with a GET, then POSTs each new message.
+Route::get('/webhooks/messenger', [MessengerWebhookController::class, 'verify'])->name('webhooks.messenger.verify');
+Route::post('/webhooks/messenger', [MessengerWebhookController::class, 'receive'])->name('webhooks.messenger');
 
 Route::get('/login', [AuthController::class, 'create'])->name('login');
 Route::post('/login', [AuthController::class, 'store'])->name('login.store');

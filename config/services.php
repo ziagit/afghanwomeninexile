@@ -38,6 +38,12 @@ return [
         'webhook_verify_token' => env('META_WEBHOOK_VERIFY_TOKEN'),
     ],
 
+    'ai_gateway' => [
+        'url' => env('AI_GATEWAY_URL', 'https://free-ai-gateway-gray.vercel.app'),
+        'key' => env('AI_GATEWAY_KEY'),
+        'model' => env('AI_GATEWAY_MODEL'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

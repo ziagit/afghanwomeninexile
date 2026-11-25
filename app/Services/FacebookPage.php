@@ -46,6 +46,36 @@ class FacebookPage
         return $this->postId($response, 'id');
     }
 
+    // Replies to someone who messaged the Page. Messenger caps a text message at 2000 characters.
+    public function sendMessage(string $recipientId, string $text): void
+    {
+        $response = Http::post($this->messagesEndpoint(), [
+            'recipient' => ['id' => $recipientId],
+            'messaging_type' => 'RESPONSE',
+            'message' => ['text' => mb_substr($text, 0, 2000)],
+            'access_token' => config('services.meta.page_access_token'),
+        ]);
+
+        if ($response->failed()) {
+            throw new RuntimeException($response->json('error.message') ?? 'Facebook returned HTTP ' . $response->status() . '.');
+        }
+    }
+
+    // Shows the "typing…" dots while the reply is being written. Failures don't matter here.
+    public function showTyping(string $recipientId): void
+    {
+        Http::post($this->messagesEndpoint(), [
+            'recipient' => ['id' => $recipientId],
+            'sender_action' => 'typing_on',
+            'access_token' => config('services.meta.page_access_token'),
+        ]);
+    }
+
+    private function messagesEndpoint(): string
+    {
+        return 'https://graph.facebook.com/' . config('services.meta.graph_version') . '/me/messages';
+    }
+
     private function postId(Response $response, string $key): string
     {
         if ($response->failed() || blank($response->json($key))) {

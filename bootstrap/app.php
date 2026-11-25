@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'locale' => \App\Http\Middleware\SetLocale::class,
         ]);
+
+        // Meta signs webhook calls instead of sending a CSRF token.
+        $middleware->validateCsrfTokens(except: ['webhooks/messenger']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (PostTooLargeException $exception, Request $request) {

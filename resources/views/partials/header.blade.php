@@ -19,13 +19,10 @@
         </nav>
 
         <div class="nav-end">
-            @php($languages = ['en' => ['name' => 'English', 'short' => 'EN', 'hreflang' => 'en'], 'fa' => ['name' => 'دری', 'short' => 'دری', 'hreflang' => 'fa-AF']])
+            @php($languages = ['en' => ['name' => 'English', 'hreflang' => 'en'], 'fa' => ['name' => 'دری', 'hreflang' => 'fa-AF']])
             <div class="lang-menu" data-lang-menu>
                 <button class="lang-menu__button" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="lang-menu-list" aria-label="{{ __('Language') }}: {{ $languages[$locale]['name'] }}" data-lang-menu-button>
                     <svg class="lang-menu__globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                    <span class="lang-menu__name" lang="{{ $locale }}">{{ $languages[$locale]['name'] }}</span>
-                    <span class="lang-menu__short" lang="{{ $locale }}">{{ $languages[$locale]['short'] }}</span>
-                    <svg class="lang-menu__chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <ul class="lang-menu__list" id="lang-menu-list" hidden data-lang-menu-list>
                     @foreach ($languages as $code => $language)

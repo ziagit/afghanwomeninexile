@@ -20,6 +20,7 @@
         <table class="admin-table">
             <thead>
                 <tr>
+                    <th>Date</th>
                     <th>Name</th>
                     <th>Tag</th>
                     <th>Title</th>
@@ -31,6 +32,7 @@
             <tbody>
                 @forelse ($activities as $activity)
                     <tr>
+                        <td>{{ $activity->published_at?->format('j M Y') }}</td>
                         <td>{{ $activity->name }}</td>
                         <td>{{ $activity->type }}</td>
                         <td>{{ $activity->title }}</td>
@@ -53,7 +55,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6">No activities found.</td>
+                        <td colspan="7">No activities found.</td>
                     </tr>
                 @endforelse
             </tbody>

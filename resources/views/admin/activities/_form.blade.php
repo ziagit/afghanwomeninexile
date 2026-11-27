@@ -20,6 +20,12 @@
             </select>
             @error('type')<span class="field-error">{{ $message }}</span>@enderror
         </div>
+        <div class="field">
+            <label for="published_at">Date</label>
+            <input id="published_at" name="published_at" type="date" value="{{ old('published_at', $activity->published_at?->format('Y-m-d')) }}" required>
+            <span class="form-note">The day it happened or was published. Activities are listed newest first by this date.</span>
+            @error('published_at')<span class="field-error">{{ $message }}</span>@enderror
+        </div>
     </div>
 
     <div class="lang-columns">

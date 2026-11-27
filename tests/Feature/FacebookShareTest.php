@@ -62,6 +62,7 @@ class FacebookShareTest extends TestCase
         $this->post(route('admin.activities.store'), [
             'name' => 'Advocacy',
             'type' => 'event',
+            'published_at' => '2026-11-20',
             'title' => 'Rally in Berlin',
             'body' => 'We marched.',
             'image' => UploadedFile::fake()->image('rally.jpg'),

@@ -19,12 +19,21 @@ class Activity extends Model
         'body',
         'body_fa',
         'image',
+        'published_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'date',
+        ];
+    }
 
     protected static function booted(): void
     {
         static::creating(function (Activity $activity): void {
             $activity->type = $activity->type ?: 'general';
+            $activity->published_at = $activity->published_at ?: now();
         });
     }
 

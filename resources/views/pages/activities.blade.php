@@ -4,6 +4,7 @@
 @php
     if (! isset($activities)) {
         $activities = \App\Models\Activity::query()
+            ->orderByDesc('published_at')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->paginate(10);

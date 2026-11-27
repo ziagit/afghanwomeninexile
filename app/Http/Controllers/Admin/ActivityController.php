@@ -28,7 +28,9 @@ class ActivityController extends Controller
                         ->orWhere('body_fa', 'like', '%' . $search . '%');
                 });
             })
+            ->orderByDesc('published_at')
             ->latest()
+            ->orderByDesc('id')
             ->paginate(10)
             ->withQueryString();
 
@@ -43,7 +45,7 @@ class ActivityController extends Controller
     {
         return view('admin.activities.create', [
             'pageTitle' => 'Create Activity',
-            'activity' => new Activity(['type' => 'general']),
+            'activity' => new Activity(['type' => 'general', 'published_at' => now()]),
         ]);
     }
 
@@ -97,6 +99,7 @@ class ActivityController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'name_fa' => ['nullable', 'string', 'max:255'],
             'type' => ['nullable', 'string', 'max:255'],
+            'published_at' => ['required', 'date'],
             'title' => ['required', 'string', 'max:255'],
             'title_fa' => ['nullable', 'string', 'max:255'],
             'body' => ['required', 'string'],

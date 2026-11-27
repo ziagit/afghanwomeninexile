@@ -130,6 +130,7 @@ class DariLocalizationTest extends TestCase
             'name' => 'Commemoration',
             'name_fa' => 'بزرگداشت',
             'type' => 'general',
+            'published_at' => '2026-03-21',
             'title' => 'Nowruz',
             'title_fa' => 'نوروز',
             'body' => 'English body',

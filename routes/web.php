@@ -22,6 +22,7 @@ $publicRoutes = function () {
     Route::get('/', function () {
         $latestActivities = Activity::query()
             ->where('type', '!=', 'event')
+            ->orderByDesc('published_at')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->take(4)
@@ -30,6 +31,7 @@ $publicRoutes = function () {
         $featuredPosts = $latestActivities->slice(1)->values();
         $latestEventRecord = Activity::query()
             ->where('type', 'event')
+            ->orderByDesc('published_at')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->first();
@@ -67,7 +69,7 @@ $publicRoutes = function () {
 
         $latestEvent = $latestEventRecord ? [
             'id' => $latestEventRecord->id,
-            'date' => $latestEventRecord->created_at,
+            'date' => $latestEventRecord->published_at ?? $latestEventRecord->created_at,
             'image' => $latestEventRecord->image ? asset('storage/'.$latestEventRecord->image) : null,
             'title' => $latestEventRecord->translated('name') ?: $latestEventRecord->translated('title'),
             'imageAlt' => $latestEventRecord->translated('title'),
@@ -85,6 +87,7 @@ $publicRoutes = function () {
 
     Route::get('/activities', function () {
         $activities = Activity::query()
+            ->orderByDesc('published_at')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->paginate(10);

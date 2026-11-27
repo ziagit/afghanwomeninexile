@@ -41,10 +41,11 @@ $publicRoutes = function () {
         if ($featuredActivity) {
             $paragraphs = array_slice($featuredActivity->paragraphs(), 0, 2);
             $image = $featuredActivity->image ? asset('storage/' . $featuredActivity->image) : null;
+            $stampDate = $featuredActivity->published_at ?? $featuredActivity->created_at;
 
             $featuredObservance = [
-                'stampDay' => Str::upper(Str::substr($featuredActivity->typeLabel(), 0, 2)),
-                'stampRest' => $featuredActivity->translated('name') ?: __('Latest activity'),
+                'stampDay' => $stampDate->format('j'),
+                'stampRest' => $stampDate->translatedFormat('F Y'),
                 'eventName' => $featuredActivity->translated('name') ?: $featuredActivity->translated('title'),
                 'paragraphs' => $paragraphs,
                 'image' => $image,

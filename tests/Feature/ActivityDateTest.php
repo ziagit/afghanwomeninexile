@@ -28,6 +28,16 @@ class ActivityDateTest extends TestCase
             ->assertSeeInOrder(['15 Aug 2026', '21 Jun 2026', '27 May 2026']);
     }
 
+    public function test_home_page_stamps_the_featured_activity_with_its_date(): void
+    {
+        Activity::create(['name' => '16 Days Campaign', 'title' => '25 November statement', 'body' => 'Text', 'published_at' => '2026-11-25']);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('<span class="day">25</span>', false)
+            ->assertSee('November 2026');
+    }
+
     public function test_admin_sets_and_changes_the_date(): void
     {
         $this->actingAs(User::factory()->create());

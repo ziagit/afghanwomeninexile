@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 // Public pages: English at /, Dari at /fa. Views link with localized_route() so visitors stay in their language.
 $publicRoutes = function () {
     Route::get('/', function () {
+        // The newest non-event activity is the Latest activity; the three after it are the featured posts.
         $latestActivities = Activity::query()
             ->where('type', '!=', 'event')
             ->orderByDesc('published_at')
@@ -27,9 +28,10 @@ $publicRoutes = function () {
             ->orderByDesc('id')
             ->take(4)
             ->get();
-        $featuredActivity = $latestActivities->first();
+        $latestActivityRecord = $latestActivities->first();
         $featuredPosts = $latestActivities->slice(1)->values();
-        $latestEventRecord = Activity::query()
+        // The newest event is the Featured Observance.
+        $featuredActivity = Activity::query()
             ->where('type', 'event')
             ->orderByDesc('published_at')
             ->orderByDesc('created_at')
@@ -45,8 +47,8 @@ $publicRoutes = function () {
 
             $featuredObservance = [
                 'stampDay' => $stampDate->format('j'),
-                'stampRest' => $stampDate->translatedFormat('F Y'),
-                'eventName' => $featuredActivity->translated('name') ?: $featuredActivity->translated('title'),
+                'stampRest' => $featuredActivity->translated('name') ?: $stampDate->translatedFormat('F Y'),
+                'eventName' => $featuredActivity->translated('title'),
                 'paragraphs' => $paragraphs,
                 'image' => $image,
                 'imageAlt' => $featuredActivity->translated('title'),
@@ -68,13 +70,14 @@ $publicRoutes = function () {
             ];
         });
 
-        $latestEvent = $latestEventRecord ? [
-            'id' => $latestEventRecord->id,
-            'date' => $latestEventRecord->published_at ?? $latestEventRecord->created_at,
-            'image' => $latestEventRecord->image ? asset('storage/'.$latestEventRecord->image) : null,
-            'title' => $latestEventRecord->translated('name') ?: $latestEventRecord->translated('title'),
-            'imageAlt' => $latestEventRecord->translated('title'),
-            'text' => Str::limit(strip_tags($latestEventRecord->translated('body')), 210),
+        $latestActivity = $latestActivityRecord ? [
+            'id' => $latestActivityRecord->id,
+            'tag' => $latestActivityRecord->typeLabel(),
+            'date' => $latestActivityRecord->published_at ?? $latestActivityRecord->created_at,
+            'image' => $latestActivityRecord->image ? asset('storage/'.$latestActivityRecord->image) : null,
+            'title' => $latestActivityRecord->translated('name') ?: $latestActivityRecord->translated('title'),
+            'imageAlt' => $latestActivityRecord->translated('title'),
+            'text' => Str::limit(strip_tags($latestActivityRecord->translated('body')), 210),
         ] : null;
 
         return view('pages.home', [
@@ -82,7 +85,7 @@ $publicRoutes = function () {
             'metaDescription' => __('MAWIE - The Movement of Afghan women in Exile. Advancing human rights, gender equality, and the protection of Afghan women through peaceful advocacy, education, and international cooperation.'),
             'featuredPosts' => $featuredPosts,
             'featuredObservance' => $featuredObservance,
-            'latestEvent' => $latestEvent,
+            'latestActivity' => $latestActivity,
         ]);
     })->name('home');
 

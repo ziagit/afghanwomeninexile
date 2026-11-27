@@ -28,14 +28,26 @@ class ActivityDateTest extends TestCase
             ->assertSeeInOrder(['15 Aug 2026', '21 Jun 2026', '27 May 2026']);
     }
 
-    public function test_home_page_stamps_the_featured_activity_with_its_date(): void
+    public function test_home_page_features_the_newest_event_stamped_with_its_day_and_name(): void
     {
-        Activity::create(['name' => '16 Days Campaign', 'title' => '25 November statement', 'body' => 'Text', 'published_at' => '2026-11-25']);
+        Activity::create(['name' => 'Refugee Day Gathering', 'type' => 'event', 'title' => 'Refugee Day gathering', 'body' => 'Older event', 'published_at' => '2026-06-20']);
+        Activity::create(['name' => 'Stop Hazara Genocide', 'type' => 'event', 'title' => 'Stop Hazara Genocide programme', 'body' => 'Newest event', 'published_at' => '2026-09-25']);
+        Activity::create(['name' => 'Teachers Day', 'title' => 'Teachers Day statement', 'body' => 'Older statement', 'published_at' => '2026-10-05']);
+        Activity::create(['name' => 'Open Letter', 'title' => 'Open letter on the ICC', 'body' => 'Newest statement', 'published_at' => '2026-11-18']);
 
-        $this->get(route('home'))
-            ->assertOk()
-            ->assertSee('<span class="day">25</span>', false)
-            ->assertSee('November 2026');
+        $home = $this->get(route('home'))->assertOk();
+
+        $home->assertSeeInOrder([
+            __('Featured Observance'),
+            '<span class="day">25</span>',
+            'Stop Hazara Genocide',
+            'Stop Hazara Genocide programme</h3>',
+            'Teachers Day',
+            __('Latest activity'),
+            'Open Letter</h3>',
+        ], false);
+        $home->assertDontSee('Refugee Day gathering');
+        $this->assertSame(1, substr_count($home->getContent(), 'Open Letter</h3>'));
     }
 
     public function test_admin_sets_and_changes_the_date(): void

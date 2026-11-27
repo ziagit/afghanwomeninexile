@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 /**
  * Draws a member's ID card as print-ready PNGs: CR80 portrait (54 x 85.6 mm) at 600 DPI,
  * with the resolution stored in the file so it prints at exact card size at 100% scale.
- * All positions are in millimetres from the card's top-left corner; text keeps 3 mm from the edge.
+ * All positions are in millimetres from the card's top-left corner; text keeps at least 1.5 mm from the edge.
  */
 class MemberCard
 {
@@ -23,30 +23,47 @@ class MemberCard
 
     private const HEIGHT_MM = 85.6;
 
+    private const CENTER = self::WIDTH_MM / 2;
+
+    private const ORGANIZATION = ['The Movement of Afghan', 'Women in Exile'];
+
+    private const EMAIL = 'info@afghanwomeninexile.org';
+
+    private const WEBSITE = 'afghanwomeninexile.org';
+
+    private const PHONE = '+923290933010';
+
+    private const FOUNDER = 'Farzana Rezaei';
+
     private const COLORS = [
+        'purple' => '8f1eae',
         'plum-dark' => '3b1f3a',
-        'parchment' => 'faf1ea',
-        'parchment-dim' => 'f4e0d9',
-        'brick' => 'c65a72',
-        'gold' => 'd4a86a',
         'ink' => '3a2436',
         'ink-soft' => '7d5f74',
-        'hairline' => 'e7d2c8',
+        'brick' => 'c65a72',
+        'shade' => 'ebebeb',
+        'ring' => 'd4d4d4',
+        'photo-empty' => 'eeeeee',
+        'muted' => '8a8a8a',
         'white' => 'ffffff',
         'black' => '000000',
     ];
 
+    // One typeface throughout: the website's Work Sans, SemiBold for headings and emphasis.
     private const FONTS = [
-        'serif' => 'Fraunces-Medium.ttf',
-        'serif-bold' => 'Fraunces-SemiBold.ttf',
         'sans' => 'WorkSans-Regular.ttf',
         'sans-bold' => 'WorkSans-SemiBold.ttf',
+    ];
+
+    private const CERTIFICATE = [
+        'This card represents membership in the Movement of Afghan Women in Exile.',
+        'The bearer is committed to the principles of freedom, equality, and social justice for Afghan women.',
+        'This membership symbolizes solidarity and cooperation toward the empowerment of women in exile.',
     ];
 
     public function __construct(
         private Verification $verification,
         private string $qrUrl,
-        private string $lookupUrl,
     ) {}
 
     // e.g. "shaima-rezaei-mawe-00131-2026-front.png" (non-Latin names are transliterated by Str::slug).
@@ -63,93 +80,100 @@ class MemberCard
 
     public function front(): string
     {
-        $card = $this->canvas('parchment');
+        $card = $this->canvas();
         $member = $this->verification;
 
-        // Header band with logo and name.
-        $this->rect($card, 0, 0, self::WIDTH_MM, 15, 'plum-dark');
-        $this->rect($card, 0, 15, self::WIDTH_MM, 0.7, 'gold');
-        $this->logo($card, 3.6, 3, 9);
-        $this->text($card, 'Afghan Women', 'serif', 9.6, 'parchment', 15, 7.1, spacing: 0.3);
-        $this->text($card, 'IN EXILE · MAWIE', 'sans-bold', 5, 'gold', 15, 10.4, spacing: 1.3);
+        $this->header($card, shadeTop: 16.7, centerY: -15.8, radiusX: 48.6, radiusY: 39);
 
-        $this->text($card, 'MEMBER CARD', 'sans-bold', 4.8, 'brick', 27, 20, 'center', 1.6);
-
-        // Photo with gold frame.
-        $this->rect($card, 15.5, 22, 24.2, 31.87, 'gold');
-        $this->photo($card, 16.1, 22.6, 23, 30.67);
+        // Round photo in a thin ring of the header and footer purple, clear of the name above it.
+        $this->disc($card, self::CENTER, 21.6, 10.85, 'purple');
+        $this->photo($card, self::CENTER, 21.6, 10.6);
 
         $name = trim($member->first_name.' '.$member->last_name);
-        $this->text($card, $name, 'serif-bold', $this->fitSize($name, 'serif-bold', 9.6, 48), 'plum-dark', 27, 58, 'center');
-        $this->memberId($card, $member->member_id, 62.9);
+        $this->text($card, $name, 'sans-bold', $this->fitSize($name, 'sans-bold', 12, 48), 'plum-dark', self::CENTER, 39.6, 'center');
 
-        $this->rect($card, 4, 64.2, 46, 0.25, 'hairline');
+        $this->roundedRect($card, 20.6, 42.6, 12.8, 3.5, 0.7, 'purple');
+        $this->text($card, 'Member', 'sans-bold', 7.4, 'white', self::CENTER, 45.15, 'center');
 
         $details = [
-            'LOCATION' => $member->location,
-            'JOINED' => $member->joined_at?->format('d M Y') ?? '-',
-            'EXPIRES' => $member->expirs_at?->format('d M Y') ?? 'No expiry',
+            'ID No' => $member->member_id,
+            'Email' => self::EMAIL,
+            'Web' => self::WEBSITE,
+            'Phone' => self::PHONE,
         ];
-        $baseline = 67.7;
+        // Quiet labels, and one size for every value, small enough for the longest to fit; the member ID stands out.
+        $valueSize = min(array_map(fn ($value) => $this->fitSize((string) $value, 'sans', 8, 36), $details));
+        $baseline = 52;
         foreach ($details as $label => $value) {
-            $this->text($card, $label, 'sans-bold', 3.9, 'ink-soft', 4, $baseline, spacing: 0.9);
-            $this->text($card, $this->truncate((string) $value, 'sans', 5.6, 28), 'sans', 5.6, 'ink', 4, $baseline + 2.4);
-            $baseline += 4.65;
+            $isId = $label === 'ID No';
+            $this->text($card, $label, 'sans-bold', 7, 'ink-soft', 4.2, $baseline);
+            $this->text($card, ':', 'sans-bold', 7, 'ink-soft', 13.4, $baseline);
+            $this->text($card, (string) $value, $isId ? 'sans-bold' : 'sans', $valueSize, $isId ? 'brick' : 'ink', 14.8, $baseline);
+            $baseline += 4.1;
         }
 
-        $this->qrCode($card, 34.6, 65.6, 15);
-        $this->text($card, 'SCAN TO VERIFY', 'sans-bold', 3.7, 'ink-soft', 42.1, 82.5, 'center', 0.7);
+        // Footer band with a raised tab holding the QR code.
+        $this->rect($card, 0, 72.8, self::WIDTH_MM, self::HEIGHT_MM - 72.8, 'purple');
+        $this->tab($card, 33.6, 52, 69.7, 72.8, 1.6, 'purple');
+        $this->roundedRect($card, 37.1, 71.6, 11.6, 11.6, 1.2, 'white');
+        $this->qrCode($card, 37.7, 72.2, 10.4);
 
-        $this->rect($card, 0, 84, self::WIDTH_MM, 1.6, 'brick');
+        $this->badge($card, 'logo-badge.png', self::CENTER, 78.6, 3.8);
 
         return $this->png($card);
     }
 
     public function back(): string
     {
-        $card = $this->canvas('plum-dark');
-        $verifyAddress = preg_replace('#^https?://#', '', $this->lookupUrl);
+        $card = $this->canvas();
+        $member = $this->verification;
 
-        $this->logo($card, 18, 9, 18);
-        $this->text($card, 'Movement of Afghan', 'serif', 10, 'parchment', 27, 33.4, 'center');
-        $this->text($card, 'Women in Exile', 'serif', 10, 'parchment', 27, 37.3, 'center');
-        $this->text($card, 'MAWIE', 'sans-bold', 5, 'gold', 27, 42.3, 'center', 1.6);
-        $this->rect($card, 22, 44.8, 10, 0.4, 'gold');
+        $this->header($card, shadeTop: 12.9, centerY: -14.7, radiusX: 44.8, radiusY: 34.4);
+        $this->badge($card, 'logo-badge.png', self::CENTER, 15.3, 3.6);
 
-        $lineHeight = 2.66;
-        $paragraphs = [
-            [[$this->wrap('The holder of this card is a registered member of the Movement of Afghan Women in Exile.', 'sans', 5.2, 46), 'sans', 'parchment-dim']],
-            [
-                [['Scan the QR code on the front, or visit'], 'sans', 'parchment-dim'],
-                [[$this->truncate($verifyAddress, 'sans-bold', 5.2, 46)], 'sans-bold', 'gold'],
-                [['and enter the member ID to verify.'], 'sans', 'parchment-dim'],
-            ],
-            [[['This card remains the property of MAWIE.'], 'sans', 'parchment-dim']],
-        ];
-        $baseline = 49.7;
-        foreach ($paragraphs as $paragraph) {
-            foreach ($paragraph as [$lines, $font, $color]) {
-                foreach ($lines as $line) {
-                    $this->text($card, $line, $font, 5.2, $color, 27, $baseline, 'center');
-                    $baseline += $lineHeight;
-                }
-            }
-            $baseline += 1.6;
+        $title = 'MEMBERSHIP CERTIFICATE';
+        $this->text($card, $title, 'sans-bold', $this->fitSize($title, 'sans-bold', 9.4, 44), 'plum-dark', self::CENTER, 24.4, 'center');
+
+        $baseline = 28.9;
+        foreach (self::CERTIFICATE as $sentence) {
+            $baseline = $this->paragraph($card, $sentence, 'sans', 5.2, 'ink', 5, 44, $baseline, 2.1) + 0.5;
         }
 
-        $this->rect($card, 12, 75, 30, 0.25, 'gold');
-        $this->text($card, 'AUTHORIZED SIGNATURE', 'sans', 4, 'parchment-dim', 27, 78.1, 'center', 1);
+        $baseline += 2.2;
+        $this->labelled($card, 'Joined:', $member->joined_at?->format('d/m/Y') ?? '-', 6.8, $baseline);
+        $this->labelled($card, 'Expires:', $member->expirs_at?->format('d/m/Y') ?? 'No expiry', 6.8, $baseline + 3.4);
 
-        $this->rect($card, 0, 84, self::WIDTH_MM, 1.6, 'brick');
+        $this->text($card, 'Sincerely,', 'sans', 6.2, 'ink', self::CENTER, 59.2, 'center');
+        $this->image($card, 'signature.png', self::CENTER - 2.9, 60.1, 5.8, 5.8);
+        $this->text($card, self::FOUNDER, 'sans', 4.6, 'ink', self::CENTER, 67.8, 'center');
+        $this->text($card, 'Founder & President', 'sans-bold', 4.6, 'ink', self::CENTER, 69.8, 'center');
+        $this->image($card, 'seal.png', self::CENTER - 2.5, 70.8, 5, 5);
+
+        // Footer band with a raised tab holding the website's social icons, centred in the tab.
+        $this->rect($card, 0, 81.6, self::WIDTH_MM, self::HEIGHT_MM - 81.6, 'purple');
+        $this->tab($card, 15.35, 38.65, 77.1, 81.6, 1.6, 'purple');
+        $this->image($card, 'social-icons.png', self::CENTER - 6.56, 78.1, 13.12, 2.5);
+        $this->text($card, self::WEBSITE, 'sans-bold', 5.2, 'white', self::CENTER, 84.2, 'center');
 
         return $this->png($card);
     }
 
-    private function canvas(string $background): GdImage
+    // Purple arc across the top with the organisation's name, over a soft grey shadow.
+    private function header(GdImage $card, float $shadeTop, float $centerY, float $radiusX, float $radiusY): void
+    {
+        $this->gradient($card, $shadeTop, $centerY + $radiusY + 4, 'shade', 'white');
+        imagefilledellipse($card, $this->px(self::CENTER), $this->px($centerY), $this->px($radiusX * 2), $this->px($radiusY * 2), $this->color($card, 'purple'));
+
+        $size = min(array_map(fn ($line) => $this->fitSize($line, 'sans-bold', 9, 48), self::ORGANIZATION));
+        $this->text($card, self::ORGANIZATION[0], 'sans-bold', $size, 'white', self::CENTER, 5, 'center');
+        $this->text($card, self::ORGANIZATION[1], 'sans-bold', $size, 'white', self::CENTER, 8.3, 'center');
+    }
+
+    private function canvas(): GdImage
     {
         $card = imagecreatetruecolor($this->px(self::WIDTH_MM), $this->px(self::HEIGHT_MM));
         imagealphablending($card, true);
-        imagefilledrectangle($card, 0, 0, imagesx($card) - 1, imagesy($card) - 1, $this->color($card, $background));
+        imagefilledrectangle($card, 0, 0, imagesx($card) - 1, imagesy($card) - 1, $this->color($card, 'white'));
 
         return $card;
     }
@@ -169,16 +193,96 @@ class MemberCard
         return (int) round($mm / 25.4 * self::DPI);
     }
 
-    private function color(GdImage $image, string $name): int
+    private function rgb(string $name): array
     {
-        [$r, $g, $b] = sscanf(self::COLORS[$name], '%02x%02x%02x');
+        return sscanf(self::COLORS[$name], '%02x%02x%02x');
+    }
 
-        return imagecolorallocate($image, $r, $g, $b);
+    private function color(GdImage $image, string $name, float $opacity = 1): int
+    {
+        [$r, $g, $b] = $this->rgb($name);
+
+        return imagecolorallocatealpha($image, $r, $g, $b, (int) round(127 * (1 - $opacity)));
     }
 
     private function rect(GdImage $card, float $x, float $y, float $width, float $height, string $color): void
     {
         imagefilledrectangle($card, $this->px($x), $this->px($y), $this->px($x + $width) - 1, $this->px($y + $height) - 1, $this->color($card, $color));
+    }
+
+    // Vertical fade from one colour to another, one pixel row at a time.
+    private function gradient(GdImage $card, float $top, float $bottom, string $from, string $to): void
+    {
+        [$top, $bottom] = [$this->px($top), $this->px($bottom)];
+        $start = $this->rgb($from);
+        $end = $this->rgb($to);
+
+        for ($y = $top; $y < $bottom; $y++) {
+            $t = ($y - $top) / max(1, $bottom - $top);
+            [$r, $g, $b] = array_map(fn ($a, $z) => (int) round($a + ($z - $a) * $t), $start, $end);
+            imageline($card, 0, $y, imagesx($card) - 1, $y, imagecolorallocate($card, $r, $g, $b));
+        }
+    }
+
+    // Filled circle with a smooth (anti-aliased) edge.
+    private function disc(GdImage $card, float $cx, float $cy, float $radius, string $color): void
+    {
+        $this->eachCirclePixel($cx, $cy, $radius, function (int $x, int $y, float $coverage) use ($card, $color) {
+            imagesetpixel($card, $x, $y, $this->color($card, $color, $coverage));
+        });
+    }
+
+    // Calls $plot for every pixel the circle touches, with how much of that pixel it covers (0-1).
+    private function eachCirclePixel(float $cx, float $cy, float $radius, callable $plot): void
+    {
+        $centerX = $cx / 25.4 * self::DPI;
+        $centerY = $cy / 25.4 * self::DPI;
+        $r = $radius / 25.4 * self::DPI;
+
+        for ($y = (int) floor($centerY - $r); $y <= (int) ceil($centerY + $r); $y++) {
+            for ($x = (int) floor($centerX - $r); $x <= (int) ceil($centerX + $r); $x++) {
+                $coverage = min(1, max(0, $r - hypot($x + 0.5 - $centerX, $y + 0.5 - $centerY) + 0.5));
+                if ($coverage > 0) {
+                    $plot($x, $y, $coverage);
+                }
+            }
+        }
+    }
+
+    private function roundedRect(GdImage $card, float $x, float $y, float $width, float $height, float $radius, string $color): void
+    {
+        $this->rect($card, $x + $radius, $y, $width - 2 * $radius, $height, $color);
+        $this->rect($card, $x, $y + $radius, $width, $height - 2 * $radius, $color);
+
+        foreach ([[$x + $radius, $y + $radius], [$x + $width - $radius, $y + $radius], [$x + $radius, $y + $height - $radius], [$x + $width - $radius, $y + $height - $radius]] as [$cx, $cy]) {
+            $this->disc($card, $cx, $cy, $radius, $color);
+        }
+    }
+
+    // A tab rising from a footer band: slanted sides from $left/$right at $base, and top corners
+    // rounded by an arc that meets both the side and the top edge smoothly.
+    private function tab(GdImage $card, float $left, float $right, float $top, float $base, float $radius, string $color): void
+    {
+        $height = $base - $top;
+        $inset = $height * 0.68;
+        $length = hypot($inset, $height);
+        [$normalX, $normalY] = [$height / $length, $inset / $length]; // left side's normal, pointing into the tab
+
+        // Centre of the circle touching the left side and the top edge.
+        $cx = $left + ($radius * $length + $inset * ($height - $radius)) / $height;
+        $cy = $top + $radius;
+        $from = atan2(-$normalY, -$normalX);
+        $to = -M_PI / 2;
+
+        $corner = [];
+        for ($step = 0; $step <= 24; $step++) {
+            $angle = $from + ($to - $from) * $step / 24;
+            $corner[] = [$cx + $radius * cos($angle), $cy + $radius * sin($angle)];
+        }
+        $mirrored = array_map(fn ($point) => [$left + $right - $point[0], $point[1]], array_reverse($corner));
+
+        $points = [[$left, $base], ...$corner, ...$mirrored, [$right, $base]];
+        imagefilledpolygon($card, array_merge(...array_map(fn ($point) => array_map($this->px(...), $point), $points)), $this->color($card, $color));
     }
 
     // GD measures font sizes at 96 DPI, so scale points to the card's resolution.
@@ -187,47 +291,27 @@ class MemberCard
         return $points * self::DPI / 96;
     }
 
-    private function pointsToPx(float $points): float
-    {
-        return $points / 72 * self::DPI;
-    }
-
     private function font(string $font): string
     {
         return resource_path('fonts/'.self::FONTS[$font]);
     }
 
-    private function width(string $text, string $font, float $points, float $spacing = 0): float
+    private function width(string $text, string $font, float $points): float
     {
         if ($text === '') {
             return 0;
         }
 
         $box = imagettfbbox($this->gdSize($points), 0, $this->font($font), $text);
-        $letterSpacing = (mb_strlen($text) - 1) * $this->pointsToPx($spacing);
 
-        return $box[2] - $box[0] + $letterSpacing;
+        return $box[2] - $box[0];
     }
 
-    private function text(GdImage $card, string $text, string $font, float $points, string $color, float $x, float $baseline, string $align = 'left', float $spacing = 0): void
+    private function text(GdImage $card, string $text, string $font, float $points, string $color, float $x, float $baseline, string $align = 'left'): void
     {
-        $width = $this->width($text, $font, $points, $spacing);
-        $left = $this->px($x) - ($align === 'center' ? $width / 2 : 0);
-        $y = $this->px($baseline);
-        $ink = $this->color($card, $color);
+        $left = $this->px($x) - ($align === 'center' ? $this->width($text, $font, $points) / 2 : 0);
 
-        if ($spacing == 0) {
-            imagettftext($card, $this->gdSize($points), 0, (int) round($left), $y, $ink, $this->font($font), $text);
-
-            return;
-        }
-
-        $characters = mb_str_split($text);
-        foreach ($characters as $index => $character) {
-            $offset = $this->width(implode('', array_slice($characters, 0, $index)), $font, $points);
-            $offset += $index * $this->pointsToPx($spacing);
-            imagettftext($card, $this->gdSize($points), 0, (int) round($left + $offset), $y, $ink, $this->font($font), $character);
-        }
+        imagettftext($card, $this->gdSize($points), 0, (int) round($left), $this->px($baseline), $this->color($card, $color), $this->font($font), $text);
     }
 
     // Largest size up to $points (in 0.2pt steps) at which the text fits $maxWidth mm.
@@ -238,19 +322,6 @@ class MemberCard
         }
 
         return $points;
-    }
-
-    private function truncate(string $text, string $font, float $points, float $maxWidth): string
-    {
-        if ($this->width($text, $font, $points) <= $this->px($maxWidth)) {
-            return $text;
-        }
-
-        while ($text !== '' && $this->width($text.'…', $font, $points) > $this->px($maxWidth)) {
-            $text = mb_substr($text, 0, -1);
-        }
-
-        return rtrim($text, " ,.;:-").'…';
     }
 
     private function wrap(string $text, string $font, float $points, float $maxWidth): array
@@ -272,28 +343,61 @@ class MemberCard
         return [...$lines, $line];
     }
 
-    // "ID" label and the member ID side by side, centred together.
-    private function memberId(GdImage $card, string $memberId, float $baseline): void
+    // A soft label and its value in brick, centred together on one line.
+    private function labelled(GdImage $card, string $label, string $value, float $points, float $baseline): void
     {
-        $size = $this->fitSize($memberId, 'sans-bold', 6.4, 40);
-        $labelWidth = $this->width('ID', 'sans-bold', 4.4, 1.2);
-        $gap = $this->px(2);
-        $idWidth = $this->width($memberId, 'sans-bold', $size, 0.9);
-        $left = ($this->px(self::WIDTH_MM) - ($labelWidth + $gap + $idWidth)) / 2;
+        $gap = $this->px(1);
+        $labelWidth = $this->width($label, 'sans', $points);
+        $left = ($this->px(self::WIDTH_MM) - ($labelWidth + $gap + $this->width($value, 'sans-bold', $points))) / 2;
 
-        $this->text($card, 'ID', 'sans-bold', 4.4, 'ink-soft', $left / self::DPI * 25.4, $baseline, spacing: 1.2);
-        $this->text($card, $memberId, 'sans-bold', $size, 'brick', ($left + $labelWidth + $gap) / self::DPI * 25.4, $baseline, spacing: 0.9);
+        $this->text($card, $label, 'sans', $points, 'ink-soft', $left / self::DPI * 25.4, $baseline);
+        $this->text($card, $value, 'sans-bold', $points, 'brick', ($left + $labelWidth + $gap) / self::DPI * 25.4, $baseline);
     }
 
-    private function logo(GdImage $card, float $x, float $y, float $size): void
+    // Wrapped, left-aligned paragraph; returns the baseline for the next paragraph.
+    private function paragraph(GdImage $card, string $text, string $font, float $points, string $color, float $x, float $width, float $baseline, float $lineHeight): float
     {
-        $logo = imagecreatefrompng(public_path('logo.png'));
-        imagepalettetotruecolor($logo);
-        imagecopyresampled($card, $logo, $this->px($x), $this->px($y), 0, 0, $this->px($size), $this->px($size), imagesx($logo), imagesy($logo));
+        foreach ($this->wrap($text, $font, $points, $width) as $line) {
+            $this->text($card, $line, $font, $points, $color, $x, $baseline);
+            $baseline += $lineHeight;
+        }
+
+        return $baseline;
     }
 
-    // Center-crop the member picture to fill the frame.
-    private function photo(GdImage $card, float $x, float $y, float $width, float $height): void
+    private function image(GdImage $card, string $file, float $x, float $y, float $width, float $height): void
+    {
+        $image = imagecreatefrompng(resource_path('images/card/'.$file));
+        imagecopyresampled($card, $image, $this->px($x), $this->px($y), 0, 0, $this->px($x + $width) - $this->px($x), $this->px($y + $height) - $this->px($y), imagesx($image), imagesy($image));
+    }
+
+    // Round white badge with a light grey ring, the image cropped to the circle.
+    private function badge(GdImage $card, string $file, float $cx, float $cy, float $radius): void
+    {
+        $this->disc($card, $cx, $cy, $radius, 'ring');
+        $this->disc($card, $cx, $cy, $radius - 0.12, 'white');
+        $this->circleImage($card, imagecreatefrompng(resource_path('images/card/'.$file)), $cx, $cy, $radius - 0.12);
+    }
+
+    // Crops $source to a square and draws it inside a circle with a smooth edge, so any photo comes out round.
+    // Tall photos are cropped nearer the top, where the face usually is.
+    private function circleImage(GdImage $card, GdImage $source, float $cx, float $cy, float $radius): void
+    {
+        $diameter = (int) ceil($radius * 2 / 25.4 * self::DPI) + 2;
+        $side = min(imagesx($source), imagesy($source));
+        $square = imagecreatetruecolor($diameter, $diameter);
+        imagecopyresampled($square, $source, 0, 0, (int) ((imagesx($source) - $side) / 2), (int) ((imagesy($source) - $side) * 0.3), $diameter, $diameter, $side, $side);
+
+        $left = (int) floor(($cx - $radius) / 25.4 * self::DPI);
+        $top = (int) floor(($cy - $radius) / 25.4 * self::DPI);
+
+        $this->eachCirclePixel($cx, $cy, $radius, function (int $x, int $y, float $coverage) use ($card, $square, $left, $top, $diameter) {
+            $pixel = imagecolorat($square, min($diameter - 1, max(0, $x - $left)), min($diameter - 1, max(0, $y - $top)));
+            imagesetpixel($card, $x, $y, imagecolorallocatealpha($card, ($pixel >> 16) & 0xFF, ($pixel >> 8) & 0xFF, $pixel & 0xFF, (int) round(127 * (1 - $coverage))));
+        });
+    }
+
+    private function photo(GdImage $card, float $cx, float $cy, float $radius): void
     {
         $path = $this->verification->picture;
         $source = $path && Storage::disk('public')->exists($path)
@@ -301,30 +405,13 @@ class MemberCard
             : false;
 
         if (! $source) {
-            $this->rect($card, $x, $y, $width, $height, 'parchment-dim');
-            $this->text($card, 'NO PHOTO', 'sans-bold', 4.6, 'ink-soft', $x + $width / 2, $y + $height / 2 + 0.6, 'center', 0.6);
+            $this->disc($card, $cx, $cy, $radius, 'photo-empty');
+            $this->text($card, 'NO PHOTO', 'sans-bold', 5, 'muted', $cx, $cy + 0.7, 'center');
 
             return;
         }
 
-        $ratio = $width / $height;
-        $sourceWidth = imagesx($source);
-        $sourceHeight = imagesy($source);
-        $cropWidth = min($sourceWidth, (int) round($sourceHeight * $ratio));
-        $cropHeight = min($sourceHeight, (int) round($sourceWidth / $ratio));
-
-        imagecopyresampled(
-            $card,
-            $source,
-            $this->px($x),
-            $this->px($y),
-            (int) (($sourceWidth - $cropWidth) / 2),
-            (int) (($sourceHeight - $cropHeight) / 2),
-            $this->px($x + $width) - $this->px($x),
-            $this->px($y + $height) - $this->px($y),
-            $cropWidth,
-            $cropHeight,
-        );
+        $this->circleImage($card, $source, $cx, $cy, $radius);
     }
 
     // Drawn module by module on whole pixels so every square prints sharp.
@@ -333,7 +420,7 @@ class MemberCard
         $matrix = (new QRCode(new QROptions([
             'eccLevel' => EccLevel::M,
             'addQuietzone' => true,
-            'quietzoneSize' => 2,
+            'quietzoneSize' => 1,
         ])))->addByteSegment($this->qrUrl)->getQRMatrix();
 
         $modules = $matrix->getSize();

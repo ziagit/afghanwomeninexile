@@ -30,7 +30,7 @@ class MemberCardController extends Controller
 
     public function image(Request $request, Verification $verification, string $side): Response
     {
-        $card = new MemberCard($verification, route('verify-card', $verification->card_token), route('verify-member'));
+        $card = new MemberCard($verification, route('verify-card', $verification->card_token));
         $png = $side === 'front' ? $card->front() : $card->back();
         $filename = MemberCard::filename($verification, $side);
 

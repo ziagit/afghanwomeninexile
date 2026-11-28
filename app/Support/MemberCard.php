@@ -25,7 +25,7 @@ class MemberCard
 
     private const CENTER = self::WIDTH_MM / 2;
 
-    private const ORGANIZATION = ['The Movement of Afghan', 'Women in Exile'];
+    private const ORGANIZATION = ['The movement of Afghanistan', 'women in exile'];
 
     private const EMAIL = 'info@afghanwomeninexile.org';
 

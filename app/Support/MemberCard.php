@@ -92,8 +92,11 @@ class MemberCard
         $name = trim($member->first_name.' '.$member->last_name);
         $this->text($card, $name, 'sans-bold', $this->fitSize($name, 'sans-bold', 12, 48), 'plum-dark', self::CENTER, 39.6, 'center');
 
-        $this->roundedRect($card, 20.6, 42.6, 12.8, 3.5, 0.7, 'purple');
-        $this->text($card, 'Member', 'sans-bold', 7.4, 'white', self::CENTER, 45.15, 'center');
+        $role = trim((string) ($member->role ?? '')) ?: Verification::DEFAULT_ROLE;
+        $roleSize = $this->fitSize($role, 'sans-bold', 7.4, 41.2);
+        $roleWidth = max(12.8, $this->width($role, 'sans-bold', $roleSize) / self::DPI * 25.4 + 4.8);
+        $this->roundedRect($card, self::CENTER - $roleWidth / 2, 42.6, $roleWidth, 3.5, 0.7, 'purple');
+        $this->text($card, $role, 'sans-bold', $roleSize, 'white', self::CENTER, 44.35 + ($roleSize / 7.4) * 0.8, 'center');
 
         $details = [
             'ID No' => $member->member_id,

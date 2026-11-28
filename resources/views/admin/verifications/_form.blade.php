@@ -31,10 +31,18 @@
         </div>
     </div>
 
-    <div class="field">
-        <label for="location">Location</label>
-        <input id="location" name="location" type="text" value="{{ old('location', $verification->location) }}" required>
-        @error('location')<span class="field-error">{{ $message }}</span>@enderror
+    <div class="form-grid">
+        <div class="field">
+            <label for="role">Role</label>
+            <input id="role" name="role" type="text" value="{{ old('role', $verification->role) }}" placeholder="{{ \App\Models\Verification::DEFAULT_ROLE }}">
+            <span class="form-note">Defaults to Member if left blank.</span>
+            @error('role')<span class="field-error">{{ $message }}</span>@enderror
+        </div>
+        <div class="field">
+            <label for="location">Location</label>
+            <input id="location" name="location" type="text" value="{{ old('location', $verification->location) }}" required>
+            @error('location')<span class="field-error">{{ $message }}</span>@enderror
+        </div>
     </div>
 
     <div class="form-grid">

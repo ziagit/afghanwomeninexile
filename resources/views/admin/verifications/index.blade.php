@@ -13,7 +13,7 @@
     <form class="member-filters" method="get" action="{{ route('admin.verifications.index') }}">
         <div class="field member-filters__search">
             <label for="q">Search</label>
-            <input id="q" name="q" type="search" value="{{ $filters['q'] }}" placeholder="Name, member ID or location">
+            <input id="q" name="q" type="search" value="{{ $filters['q'] }}" placeholder="Name, role, member ID or location">
         </div>
         <div class="field">
             <label for="status">Status</label>
@@ -58,6 +58,7 @@
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Role</th>
                     <th>Member ID</th>
                     <th>Location</th>
                     <th>Status</th>
@@ -69,6 +70,7 @@
                 @forelse ($verifications as $verification)
                     <tr>
                         <td>{{ $verification->first_name }} {{ $verification->last_name }}</td>
+                        <td>{{ $verification->role ?: \App\Models\Verification::DEFAULT_ROLE }}</td>
                         <td>{{ $verification->member_id }}</td>
                         <td>{{ $verification->location }}</td>
                         <td><span class="status-pill status-pill--{{ $verification->status() }}">{{ ucfirst($verification->status()) }}</span></td>
@@ -85,7 +87,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6">{{ $filtered ? 'No members match these filters.' : 'No members found.' }}</td>
+                        <td colspan="7">{{ $filtered ? 'No members match these filters.' : 'No members found.' }}</td>
                     </tr>
                 @endforelse
             </tbody>

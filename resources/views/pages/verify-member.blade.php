@@ -52,6 +52,7 @@
                             <h2>{{ $verification->first_name }} {{ $verification->last_name }}</h2>
                             <p class="verify-member-id"><bdi dir="ltr">{{ $verification->member_id }}</bdi></p>
                             <dl class="verify-details">
+                                <div><dt>{{ __('Role') }}</dt><dd>{{ $verification->role ?: \App\Models\Verification::DEFAULT_ROLE }}</dd></div>
                                 <div><dt>{{ __('Status') }}</dt><dd>{{ $style['badge'] }}</dd></div>
                                 <div><dt>{{ __('Valid until') }}</dt><dd>{{ $verification->expirs_at?->translatedFormat('j F Y') ?? __('No expiry date') }}</dd></div>
                             </dl>

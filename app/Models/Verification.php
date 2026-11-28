@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class Verification extends Model
 {
+    public const DEFAULT_ROLE = 'Member';
+
     public const STATUS_ACTIVE = 'active';
 
     public const STATUS_EXPIRED = 'expired';
@@ -17,6 +19,7 @@ class Verification extends Model
     protected $fillable = [
         'first_name',
         'last_name',
+        'role',
         'dob',
         'location',
         'joined_at',
@@ -38,6 +41,11 @@ class Verification extends Model
     {
         static::creating(function (Verification $verification) {
             $verification->card_token ??= static::newCardToken();
+        });
+
+        static::saving(function (Verification $verification) {
+            $role = trim((string) ($verification->role ?? ''));
+            $verification->role = $role !== '' ? $role : self::DEFAULT_ROLE;
         });
     }
 

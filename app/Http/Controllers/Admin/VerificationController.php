@@ -28,6 +28,7 @@ class VerificationController extends Controller
                 $query->where(fn (Builder $query) => $query
                     ->where('member_id', 'like', $term)
                     ->orWhere('location', 'like', $term)
+                    ->orWhere('role', 'like', $term)
                     ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", [$term]));
             })
             ->when($filters['status'] !== '', fn (Builder $query) => $query->withStatus($filters['status']))
@@ -123,9 +124,10 @@ class VerificationController extends Controller
 
     private function validateRequest(Request $request, ?Verification $verification = null): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'role' => ['nullable', 'string', 'max:255'],
             'dob' => ['required', 'date'],
             'location' => ['required', 'string', 'max:255'],
             'joined_at' => ['required', 'date'],
@@ -141,6 +143,11 @@ class VerificationController extends Controller
         ], [
             'picture.max' => 'This file size is too large. Please optimize and upload.',
         ]);
+
+        $role = trim((string) ($data['role'] ?? ''));
+        $data['role'] = $role !== '' ? $role : Verification::DEFAULT_ROLE;
+
+        return $data;
     }
 
     private function storePicture(Request $request): ?string
